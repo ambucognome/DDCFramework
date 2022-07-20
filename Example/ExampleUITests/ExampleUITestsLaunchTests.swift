@@ -2,7 +2,7 @@
 //  ExampleUITestsLaunchTests.swift
 //  ExampleUITests
 //
-//  Created by Santosh Naidu on 7/20/22.
+//  Created by Ambu Sangoli on 7/20/22.
 //
 
 import XCTest
