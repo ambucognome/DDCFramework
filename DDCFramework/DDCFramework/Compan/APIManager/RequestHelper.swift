@@ -88,6 +88,17 @@ class RequestHelper : NSObject {
                                 if entityGroup[entityGroupIndex].value.uniqueId == parentEntityGroupId  {
                                     for nestedEntityIndex in 0..<(entityGroup[entityGroupIndex].value.sortedEntitiesArray?.count ?? 0) {
                                         if let entityy = entityGroup[entityGroupIndex].value.sortedEntitiesArray?[nestedEntityIndex].value {
+                                            if nestedEntityIndex == 0 {
+                                                pathCreation = pathCreation.replacingOccurrences(of: "Entities[\(entityIndex - 1 )] ->", with: "")
+                                                pathCreation = pathCreation.replacingOccurrences(of: "Entities[\(entityIndex)] ->", with: "")
+
+                                                url = url.replacingOccurrences(of: ".entities.\(entity.uri ?? "")", with: "")
+
+                                                url += ".entities.\(entity.uri ?? "")"
+                                                url += ".entity_groups[\(entityGroupIndex.description)].\(entityGroup[entityGroupIndex].value.uri ?? "")"
+                                                pathCreation += "Entities[\(entityIndex)] -> "
+                                                pathCreation += "Entity Group[\(entityGroupIndex)] -> "
+                                            }
                                         if (entity.type == .entityGroupRepeatable || entity.type == .entityGroup) && entityy.id != entityId {
                                             pathCreation = pathCreation.replacingOccurrences(of: "Entities[\(entityIndex - 1 )] ->", with: "")
                                             pathCreation = pathCreation.replacingOccurrences(of: "Entities[\(entityIndex)] ->", with: "")
@@ -102,7 +113,7 @@ class RequestHelper : NSObject {
                                         if entityy.id == entityId {
                                             url += ".entities.\(entityy.uri ?? "")"
                                             pathCreation += "Entites[\(nestedEntityIndex.description)]"
-
+                                           //template.entities.chdi_dbs.entity_groups[0].chdi_db.entities.db_cred
                                             print(pathCreation)
                                             print(url)
                                             self.updateValue(entity: entityData, newValue: newValue, path: url,isCalculativeEntity: isCalculativeEntity)
@@ -118,6 +129,17 @@ class RequestHelper : NSObject {
                                 if entityGroup[entityGroupIndex].value.uniqueId == entityGroupId  {
                                     for nestedEntityIndex in 0..<(entityGroup[entityGroupIndex].value.sortedEntitiesArray?.count ?? 0) {
                                         if let entityy = entityGroup[entityGroupIndex].value.sortedEntitiesArray?[nestedEntityIndex].value {
+                                            if nestedEntityIndex == 0 {
+                                                pathCreation = pathCreation.replacingOccurrences(of: "Entities[\(entityIndex - 1 )] ->", with: "")
+                                                pathCreation = pathCreation.replacingOccurrences(of: "Entities[\(entityIndex)] ->", with: "")
+
+                                                url = url.replacingOccurrences(of: ".entities.\(entity.uri ?? "")", with: "")
+
+                                                url += ".entities.\(entity.uri ?? "")"
+                                                url += ".entity_groups[\(entityGroupIndex.description)].\(entityGroup[entityGroupIndex].value.uri ?? "")"
+                                                pathCreation += "Entities[\(entityIndex)] -> "
+                                                pathCreation += "Entity Group[\(entityGroupIndex)] -> "
+                                            }
                                     if (entity.type == .entityGroupRepeatable || entity.type == .entityGroup) && entityy.id != entityId {
                                         pathCreation = pathCreation.replacingOccurrences(of: "Entities[\(entityIndex - 1 )] ->", with: "")
                                         pathCreation = pathCreation.replacingOccurrences(of: "Entities[\(entityIndex)] ->", with: "")
@@ -208,9 +230,11 @@ class RequestHelper : NSObject {
                                 
                                 let group : Dictionary<String, EntityRepeatableGroup> = [entityGroupToRepeat.uri! : entityGroupToAdd]
                                 
-                                ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?.insert(contentsOf: group, at: entityGroupIndex + 1)
+//                                ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?.insert(contentsOf: group, at: entityGroupIndex + 1)
                                 self.addRepeatableEntityGroup(object: [entityGroupToRepeat.uri ?? "" : Utilities.shared.convertToDictionary(text: entityGroupToAdd.convertToString!) ?? ""],path: "template.entities.\(entity.uri ?? "").entity_groups")
-                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+//                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadAPI"), object: nil)
+
                                 return
                             } else {
                                 self.repeatEntityGroupCheck(entityGroupToRepeat: entityGroupToRepeat, entities: data.sortedEntitiesArray, mainEntityIndex: entityIndex,entityGroupsIndex: entityGroupIndex)
@@ -241,15 +265,18 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
 
                             let entityGroupToAdd : EntityRepeatableGroup = EntityRepeatableGroup(type: data.type, title: data.title, active: data.active, order: heighValue + 1, guiControlType: data.guiControlType, id: data.id, value: data.value, oldValue: data.oldValue, lastUpdatedBy: data.lastUpdatedBy, lastUpdatedDate: data.lastUpdatedDate, uri: data.uri, valueSetRef: data.valueSetRef, settings: data.settings, entityGroups: data.entityGroups, isRepeated: data.isRepeated, entities: data.entities,sortedEntityGroupsArray: data.sortedEntityGroupsArray, sortedEntitiesArray: data.sortedEntitiesArray, uniqueId: self.randomStringWithLength())
                             let group : Dictionary<String, EntityRepeatableGroup> = [entityGroupToRepeat.uri! : entityGroupToAdd]
-                            entityGroup.insert(contentsOf: group, at: entityGroupIndex + 1)
+//                            entityGroup.insert(contentsOf: group, at: entityGroupIndex + 1)
 
-                            ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.sortedEntitiesArray?[entityIndex].value.sortedEntityGroupsArray?.insert(entityGroup[entityGroupIndex], at: entityGroupIndex + 1)
+//                            ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.sortedEntitiesArray?[entityIndex].value.sortedEntityGroupsArray?.insert(entityGroup[entityGroupIndex], at: entityGroupIndex + 1)
                             
                             let path = "template.entities.\(ddcModel?.template?.sortedArray?[mainEntityIndex].value.uri ?? "").entity_groups[\(entityGroupsIndex.description)].\(ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.uri ?? "").entities.\(ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.sortedEntitiesArray?[entityIndex].value.uri ?? "").entity_groups"
                             
                             self.addRepeatableEntityGroup(object: [entityGroupToRepeat.uri ?? "" : Utilities.shared.convertToDictionary(text: entityGroupToAdd.convertToString!) ?? ""],path: path)
 
-                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+//                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadAPI"), object: nil)
+
+                            
                             return
                         }  else {
                             self.repeatEntityGroupCheck(entityGroupToRepeat: entityGroupToRepeat, entities: data.sortedEntitiesArray, mainEntityIndex: entityIndex,entityGroupsIndex: entityGroupIndex)
@@ -271,10 +298,11 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
                         for entityGroupIndex in 0..<(entityGroup.count ) {
                             if entityGroup[entityGroupIndex].value.uri == entityGroupToRepeat.uri {
                                 if entityGroupIndex <= ((ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?.count ?? 0) - 1) {
-                                    ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?.remove(at: entityGroupIndex)
+//                                    ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?.remove(at: entityGroupIndex)
                                     self.deleteRepeatableEntityGroup(object: [entityGroupToRepeat.uri ?? "" : Utilities.shared.convertToDictionary(text: entityGroupToRepeat.convertToString!) ?? ""],path: "template.entities.\(entity.uri ?? "").entity_groups")
-
-                                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+                                    
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadAPI"), object: nil)
+//                                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
                                     return
                                 }
                             } else {
@@ -299,10 +327,12 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
                                 entityGroup.insert(contentsOf: group, at: entityGroupIndex + 1)
                                 
                                 if entityGroupIndex <= ((ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.sortedEntitiesArray?[entityIndex].value.sortedEntityGroupsArray?.count ?? 0) - 1) {
-                                    ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.sortedEntitiesArray?[entityIndex].value.sortedEntityGroupsArray?.remove( at: entityGroupIndex + 1)
+//                                    ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.sortedEntitiesArray?[entityIndex].value.sortedEntityGroupsArray?.remove( at: entityGroupIndex + 1)
                                     let path = "template.entities.\(ddcModel?.template?.sortedArray?[mainEntityIndex].value.uri ?? "").entity_groups[\(entityGroupsIndex.description)].\(ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.uri ?? "").entities.\(ddcModel?.template?.sortedArray?[mainEntityIndex].value.sortedEntityGroupsArray?[entityGroupsIndex].value.sortedEntitiesArray?[entityIndex].value.uri ?? "").entity_groups"
                                     self.deleteRepeatableEntityGroup(object: [entityGroupToRepeat.uri ?? "" : Utilities.shared.convertToDictionary(text: entityGroupToRepeat.convertToString!) ?? ""],path: path)
-                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+//                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadAPI"), object: nil)
+
                                     return
                                 }
                             }  else {

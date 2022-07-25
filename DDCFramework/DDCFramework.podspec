@@ -3,7 +3,7 @@ Pod::Spec.new do |spec|
 
 
   spec.name         = "DDCFramework"
-  spec.version      = "1.0.0"
+  spec.version      = "1.0.1"
     spec.requires_arc = true
   spec.summary      = "This is form framework"
   spec.description  = "Framework for form module"
