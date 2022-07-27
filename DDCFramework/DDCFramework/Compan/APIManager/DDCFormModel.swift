@@ -148,6 +148,9 @@ class Entity: Codable {
         for item in self.sortedEntityGroupsArray ?? [] {
             item.value.uri = item.key
         }
+        
+        self.sortedEntityGroupsArray = sortedEntityGroupsArray?.sorted{ $0.value.order ?? 0 < $1.value.order ?? 0}
+
 
     }
     
@@ -181,6 +184,9 @@ class Entity: Codable {
         for item in self.sortedEntityGroupsArray ?? [] {
             item.value.uri = item.key
         }
+        
+        self.sortedEntityGroupsArray = sortedEntityGroupsArray?.sorted{ $0.value.order ?? 0 < $1.value.order ?? 0}
+
     }
     
     

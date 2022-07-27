@@ -21,6 +21,8 @@ class RadioButtonTableViewCell: UITableViewCell {
     var fieldValueArray = [String]()
     var fieldIdArray = [String]()
     var parentEntityGroupId = ""
+    var groupOrder = 0
+
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -33,13 +35,14 @@ class RadioButtonTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setUpRadioCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99") {
+    func setUpRadioCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
         self.indexPath = indexPath
         let dataa : Entity? = entity
         self.parentEntityGroupId = parentEntityGroupId
+        self.groupOrder = groupOrder
 
 //        if data.template?.entities![indexPath.section].type == .entityGroupRepeatable {
 //            dataa = data.template?.entities![indexPath.section].entityGroups![0].entities![indexPath.row]
@@ -90,7 +93,7 @@ class RadioButtonTableViewCell: UITableViewCell {
         let newValue = self.fieldIdArray[selectionList.selectedIndex ?? 0]
         if newValue == "" { return }
 //        RequestHelper.shared.createRequestForEntity(data: self.data!, index: self.indexPath!, newValue: newValue)
-        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: newValue, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId)
+        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: newValue, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
 
     }
 

@@ -18,6 +18,7 @@ class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     var entity : Entity?
     var entityGroupId: String = ""
     var parentEntityGroupId = ""
+    var groupOrder = 0
 
     
     override func awakeFromNib() {
@@ -32,13 +33,14 @@ class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
         // Configure the view for the selected state
     }
     
-    func setUpTimePickerCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath,entityGroupId: String,parentEntityGroupId:String = "99") {
+    func setUpTimePickerCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
         self.indexPath = indexPath
         let dataa : Entity? = entity
         self.parentEntityGroupId = parentEntityGroupId
+        self.groupOrder = groupOrder
 
 //        if data.template?.entities![indexPath.section].type == .entityGroupRepeatable {
 //            dataa = data.template?.entities![indexPath.section].entityGroups![0].entities![indexPath.row]
@@ -66,7 +68,7 @@ class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
                 formatter.dateFormat = "hh:mm:ss a"
                 self.textField.text = formatter.string(from: dt)
 //                RequestHelper.shared.createRequestForEntity(data: self.data!, index: self.indexPath!, newValue: self.textField.text!)
-                RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: self.textField.text!, entityGroupId: self.entityGroupId,parentEntityGroupId: self.parentEntityGroupId)
+                RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: self.textField.text!, entityGroupId: self.entityGroupId,parentEntityGroupId: self.parentEntityGroupId,groupOrder: self.groupOrder)
             }
         }
     }

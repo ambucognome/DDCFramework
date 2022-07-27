@@ -19,6 +19,7 @@ class PickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     var entity : Entity?
     var entityGroupId: String = ""
     var parentEntityGroupId = ""
+    var groupOrder = 0
 
 
     override func awakeFromNib() {
@@ -35,13 +36,14 @@ class PickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     var values = [String]()
     
-    func setupPickerCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99") {
+    func setupPickerCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
         self.indexPath = indexPath
         let dataa : Entity? = entity
         self.parentEntityGroupId = parentEntityGroupId
+        self.groupOrder = groupOrder
 
 //        if data.template?.entities![indexPath.section].type == .entityGroupRepeatable {
 //            dataa = data.template?.entities![indexPath.section].entityGroups![0].entities![indexPath.row]
@@ -74,7 +76,7 @@ class PickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     @objc func done(){
         self.endEditing(true)
 //        RequestHelper.shared.createRequestForEntity(data: self.data!, index: self.indexPath!, newValue: self.textField.text!)
-        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: self.textField.text!, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId)
+        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: self.textField.text!, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
     }
     
     @objc func cancelPickerView(){

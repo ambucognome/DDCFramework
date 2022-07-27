@@ -18,6 +18,7 @@ class SliderTableViewCell: UITableViewCell {
     var entity : Entity?
     var entityGroupId: String = ""
     var parentEntityGroupId = ""
+    var groupOrder = 0
 
     
     override func awakeFromNib() {
@@ -32,12 +33,13 @@ class SliderTableViewCell: UITableViewCell {
     }
     
     
-    func setupSliderCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99") {
+    func setupSliderCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
         self.indexPath = indexPath
         self.parentEntityGroupId = parentEntityGroupId
+        self.groupOrder = groupOrder
 
         let dataa : Entity? = entity
 //        if data.template?.entities![indexPath.section].type == .entityGroupRepeatable {
@@ -69,7 +71,7 @@ class SliderTableViewCell: UITableViewCell {
         self.valueSlider.value = Float(Int(round(sender.value)))
         self.valueLabel.text = Int(round(sender.value)).description
 //        RequestHelper.shared.createRequestForEntity(data: self.data!, index: self.indexPath!, newValue: Int(round(sender.value)).description)
-        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: Int(round(sender.value)).description, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId)
+        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: Int(round(sender.value)).description, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
     }
     
     

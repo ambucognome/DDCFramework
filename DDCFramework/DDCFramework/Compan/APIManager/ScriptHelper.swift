@@ -31,7 +31,7 @@ class ScriptHelper : NSObject {
                 }
                 if entity.type == .calculatedEntity && entity.calculation != nil {
                     self.executeCalculativeScrip(parentObj: ddcModel?.template?.convertToString ?? "", scriptString: entity.calculation!) { value in
-                        RequestHelper.shared.createRequestForEntity(entity: entity, newValue: value, entityGroupId: ddcModel?.template?.uniqueId ?? "" ,parentEntityGroupId: "",isCalculativeEntity: true)
+                        RequestHelper.shared.createRequestForEntity(entity: entity, newValue: value, entityGroupId: ddcModel?.template?.uniqueId ?? "" ,parentEntityGroupId: "",isCalculativeEntity: true, groupOrder: 0)
                         ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable(value)
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
 
@@ -54,7 +54,7 @@ class ScriptHelper : NSObject {
                                     if nestedEntity.type == .calculatedEntity && nestedEntity.calculation != nil {
                                         self.executeCalculativeScrip(parentObj: ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?[entityGroupIndex].value.convertToString ?? "", scriptString: nestedEntity.calculation!) { value in
                                             
-                                            RequestHelper.shared.createRequestForEntity(entity: nestedEntity, newValue: value, entityGroupId:data.uniqueId  ,parentEntityGroupId: ddcModel?.template?.uniqueId ?? "" ,isCalculativeEntity: true)
+                                            RequestHelper.shared.createRequestForEntity(entity: nestedEntity, newValue: value, entityGroupId:data.uniqueId  ,parentEntityGroupId: ddcModel?.template?.uniqueId ?? "" ,isCalculativeEntity: true, groupOrder: ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?[entityGroupIndex].value.order ?? 0)
                                             
                                             ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?[entityGroupIndex].value.sortedEntitiesArray?[nestedEntityIndex].value.value = AnyCodable(value)
                                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
@@ -76,7 +76,7 @@ class ScriptHelper : NSObject {
                                                         if nestedEntity.type == .calculatedEntity && nestedEntity.calculation != nil {
                                                             self.executeCalculativeScrip(parentObj: ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?[nentityGroupIndex].value.convertToString ?? "", scriptString: nestedEntity.calculation!) { value in
                                                                 
-                                                                RequestHelper.shared.createRequestForEntity(entity: nestedEntity, newValue: value, entityGroupId: nestedEntityGroup[nentityGroupIndex].value.uniqueId  ,parentEntityGroupId: data.uniqueId ,isCalculativeEntity: true)
+                                                                RequestHelper.shared.createRequestForEntity(entity: nestedEntity, newValue: value, entityGroupId: nestedEntityGroup[nentityGroupIndex].value.uniqueId  ,parentEntityGroupId: data.uniqueId ,isCalculativeEntity: true, groupOrder: ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?[nentityGroupIndex].value.order ?? 0)
 
                                                                 
                                                                 ddcModel?.template?.sortedArray?[entityIndex].value.sortedEntityGroupsArray?[entityGroupIndex].value.sortedEntitiesArray?[nestedEntityIndex].value.sortedEntityGroupsArray?[nentityGroupIndex].value.sortedEntitiesArray?[nnestedEntityIndex].value.value = AnyCodable(value)

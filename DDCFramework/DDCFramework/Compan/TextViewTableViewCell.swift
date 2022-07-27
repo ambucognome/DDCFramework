@@ -17,6 +17,7 @@ class TextViewTableViewCell: UITableViewCell,UITextViewDelegate {
     var entity : Entity?
     var entityGroupId: String = ""
     var parentEntityGroupId = ""
+    var groupOrder = 0
 
 
     override func awakeFromNib() {
@@ -24,13 +25,14 @@ class TextViewTableViewCell: UITableViewCell,UITextViewDelegate {
         // Initialization code
     }
 
-    func setUpTextViewAreaCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99") {
+    func setUpTextViewAreaCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
         self.indexPath = indexPath
         let dataa : Entity? = entity
         self.parentEntityGroupId = parentEntityGroupId
+        self.groupOrder = groupOrder
 
 //        if data.template?.entities![indexPath.section].type == .entityGroupRepeatable {
 //            dataa = data.template?.entities![indexPath.section].entityGroups![0].entities![indexPath.row]
@@ -71,7 +73,7 @@ class TextViewTableViewCell: UITableViewCell,UITextViewDelegate {
             self.textView.textColor = UIColor.lightGray
         } else {
 //            RequestHelper.shared.createRequestForEntity(data: self.data!, index: self.indexPath!, newValue: textView.text!)
-            RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: textView.text!, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId)
+            RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: textView.text!, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
         }
     }
 }

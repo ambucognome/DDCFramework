@@ -28,6 +28,7 @@ class CheckBoxTableViewCell: UITableViewCell {
     var parentEntityGroupId = ""
     var fieldValueArray = [String]()
     var fieldIdArray = [String]()
+    var groupOrder = 0
 
 
     override func awakeFromNib() {
@@ -41,13 +42,15 @@ class CheckBoxTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setUpCheckBoxCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99") {
+    func setUpCheckBoxCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
         self.indexPath = indexPath
         self.parentEntityGroupId = parentEntityGroupId
         let dataa : Entity? = entity
+        self.groupOrder = groupOrder
+
 //        if data.template?.entities![indexPath.section].type == .entityGroupRepeatable {
 //            dataa = data.template?.entities![indexPath.section].entityGroups![0].entities![indexPath.row]
 //        } else {
@@ -106,7 +109,7 @@ class CheckBoxTableViewCell: UITableViewCell {
         print(values)
 //        let valueString = values.joined(separator: ",")
 //        RequestHelper.shared.createRequestForEntity(data: self.data!, index: self.indexPath!, newValue: valueString)
-        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: values, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId)
+        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: values, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
 
     }
 

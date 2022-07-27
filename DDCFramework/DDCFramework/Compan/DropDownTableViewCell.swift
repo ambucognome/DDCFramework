@@ -28,7 +28,7 @@ class DropDownTableViewCell: UITableViewCell {
     }
     
     
-    func setUpDropDownCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath,entityGroupId: String,parentEntityGroupId:String = "99") {
+    func setUpDropDownCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
         let dataa : Entity? = entity
 //        if data.template?.entities![indexPath.section].type == .entityGroupRepeatable {
 //            dataa = data.template?.entities![indexPath.section].entityGroups![0].entities![indexPath.row]
@@ -63,7 +63,7 @@ class DropDownTableViewCell: UITableViewCell {
           mainDropDown.didSelect{(selectedText , index , id) in
             //  self.valueLabel.text = "Selected String: \(selectedText) \n index: \(index) \n Id: \(id)"
 //              RequestHelper.shared.createRequestForEntity(data: data, index: indexPath, newValue: selectedText)
-              RequestHelper.shared.createRequestForEntity(entity: entity, newValue: id, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId)
+              RequestHelper.shared.createRequestForEntity(entity: entity, newValue: id, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
           }
           mainDropDown.arrowSize = 10
 

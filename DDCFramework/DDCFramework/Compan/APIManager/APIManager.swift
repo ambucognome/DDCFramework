@@ -225,7 +225,7 @@ class APIManager : NSObject {
                     APIManager.sharedInstance.showAlertWithMessage(message: self.choooseMessageForErrorCode(errorCode: statusCode!))
                 }
             case .failure( _):
-                completion(false,[:],0)
+                completion(true,[:],0)
             }
         }
     }
