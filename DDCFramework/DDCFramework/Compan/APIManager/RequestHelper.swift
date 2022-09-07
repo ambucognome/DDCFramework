@@ -6,12 +6,16 @@
 //
 
 import Foundation
+import JavaScriptCore
+
 class RequestHelper : NSObject {
     
     static let shared = RequestHelper()
 
     var pathCreation = ""
     var url = ""
+    let context = JSContext()!
+
     
     func createRequestForEntity(entity:Entity, newValue: Any, entityGroupId: String,parentEntityGroupId:String,isCalculativeEntity: Bool = false,groupOrder:Int){
         self.getRepeatableEntityAddress(entityData: entity, newValue: newValue, entityGroupId: entityGroupId,parentEntityGroupId:parentEntityGroupId,isCalculativeEntity: isCalculativeEntity,groupOrder: groupOrder)
@@ -20,12 +24,11 @@ class RequestHelper : NSObject {
     
     
     func updateValueAPI(parameter: [String:Any], isCalculativeEntity: Bool) {
-
         let jsonData = try! JSONSerialization.data(withJSONObject: parameter, options: JSONSerialization.WritingOptions.prettyPrinted)
         let jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
         print(jsonString)
 
-        ERProgressHud.shared.show()
+//        ERProgressHud.shared.show()
         APIManager.sharedInstance.makeRequestToUpdateEntityValue(data: jsonData){ (success, response,statusCode)  in
             if (success) {
                 ERProgressHud.shared.hide()
@@ -78,8 +81,36 @@ class RequestHelper : NSObject {
                     url += ".entities.\(entity.uri ?? "")"
                     print(pathCreation)
                     print(url)
-                    self.updateValue(entity: entityData, newValue: newValue, path: url,isCalculativeEntity: isCalculativeEntity)
-                    return
+                    if savePerField == false {
+                        ddcModel?.template?.sortedArray?[entityIndex].value.oldValue = entity.value
+                        if let newValueString = newValue as? String {
+                            ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringLiteral: newValueString)
+                        } else if let newValueStringArray = newValue as? [String] {
+                            if entity.onValue != nil && entity.onValue != "" {
+                                self.executeScript(currentValue: newValue, previousValue: entity.value?.value as Any, scriptString: entity.onValue!) { value in
+                                    ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringArrayLiteral: value)
+                                }
+                            } else {
+                                ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringArrayLiteral: newValueStringArray)
+                            }
+                        } else if let newValueStringArray = newValue as? Bool {
+                            ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(booleanLiteral:  newValueStringArray)
+                        } else if let newValueStringArray = newValue as? [String: Any]  {
+                            ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringDictionaryLiteral: newValueStringArray)
+                        }
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+                        return
+                    }
+                    if entity.onValue != nil && entity.onValue != "" {
+                        //run script
+                        self.executeScript(currentValue: newValue, previousValue: entity.value?.value as Any, scriptString: entity.onValue!) { value in
+                            self.updateValue(entity: entityData, newValue: value, path: self.url,isCalculativeEntity: isCalculativeEntity)
+                            return
+                        }
+                    } else {
+                        self.updateValue(entity: entityData, newValue: newValue, path: url,isCalculativeEntity: isCalculativeEntity)
+                        return
+                    }
                 }
                 if entity.type == .entityGroupRepeatable || entity.type == .entityGroup{
                     if let entityGroup = entity.sortedEntityGroupsArray {
@@ -418,6 +449,37 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
         }
 
         return randomString as String
+    }
+    
+    func json(from object:Any) -> String? {
+        guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
+            return nil
+        }
+        return String(data: data, encoding: String.Encoding.utf8)
+    }
+    
+    func executeScript(currentValue: Any, previousValue: Any, scriptString:String, completion: @escaping  ([String]) -> ()) {
+//        onValue = "const filteredValue = currentValue.filter(symp => !previousValue.includes(symp));if (filteredValue.includes(\"symptoms__0\")) return [\"symptoms_0\"]; else return currentValue.filter(key => key !== \"symptoms__0\");";
+
+        let currentValueString = self.json(from: (currentValue as? [String] ?? [])) ?? ""//.convertToString
+        let previousValueString = self.json(from: (previousValue as? [String] ?? [])) ?? ""
+
+        let jsCode = scriptString
+
+        print(jsCode)
+        let script = "\"use strict\"; function  ddcscript(currentValueString,previousValueString) { " +
+        "var currentValue=currentValueString; " +
+        "var previousValue=previousValueString; " +
+        "var executeJSCode = function(currentValue,previousValue) {" + jsCode + "}; " +
+        "return executeJSCode(currentValue,previousValue); " +
+        "}";
+        
+        context.evaluateScript(script)
+
+        let result: JSValue = context.evaluateScript("ddcscript(\(currentValueString),\(previousValueString));")
+        print("onValue jsScript Result ---- ",result)        
+        let value = result.toArray() as? [String] ?? []
+        completion(value)
     }
 
 }

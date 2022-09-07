@@ -10,6 +10,7 @@ import UIKit
 class RepeatableTableViewCell: UITableViewCell {
     
     @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var headerViewHeight: NSLayoutConstraint!
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -36,6 +37,11 @@ class RepeatableTableViewCell: UITableViewCell {
     }
     
     func setupHeaderView(entityGroup: EntityRepeatableGroup,groupCount: Int, sectionIndex: Int){
+        if showHeader == false {
+            self.headerViewHeight.constant = 0
+            return
+        }
+        self.headerViewHeight.constant = 50
         for v in headerView.subviews {
             v.removeFromSuperview()
         }
@@ -44,6 +50,10 @@ class RepeatableTableViewCell: UITableViewCell {
         titleLabel.textColor = .white
         headerView.addSubview(titleLabel)
         titleLabel.text =  entityGroup.title
+        headerView.backgroundColor = headerBackgroundColor
+        titleLabel.textColor = headerFontColor
+        titleLabel.font = headerFont
+
 
 //        if entityGroup.entities?[0]?.
 
@@ -88,17 +98,21 @@ class RepeatableTableViewCell: UITableViewCell {
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: "DefaultCell")
         //Register cell for using in tableview
-        tableView.register(UINib(nibName: "TextfieldComponent", bundle: nil), forCellReuseIdentifier: "TextfieldComponent")
-        tableView.register(UINib(nibName: "DropDownTableViewCell", bundle: nil), forCellReuseIdentifier: "DropDownTableViewCell")
-        tableView.register(UINib(nibName: "RadioButtonTableViewCell", bundle: nil), forCellReuseIdentifier: "RadioButtonTableViewCell")
-        tableView.register(UINib(nibName: "CheckBoxTableViewCell", bundle: nil), forCellReuseIdentifier: "CheckBoxTableViewCell")
-        tableView.register(UINib(nibName: "TextViewTableViewCell", bundle: nil), forCellReuseIdentifier: "TextViewTableViewCell")
-        tableView.register(UINib(nibName: "DatePickerTableViewCell", bundle: nil), forCellReuseIdentifier: "DatePickerTableViewCell")
-        tableView.register(UINib(nibName: "MessageTableViewCell", bundle: nil), forCellReuseIdentifier: "MessageTableViewCell")
-        tableView.register(UINib(nibName: "TimePickerTableViewCell", bundle: nil), forCellReuseIdentifier: "TimePickerTableViewCell")
-        tableView.register(UINib(nibName: "PickerTableViewCell", bundle: nil), forCellReuseIdentifier: "PickerTableViewCell")
-        tableView.register(UINib(nibName: "SliderTableViewCell", bundle: nil), forCellReuseIdentifier: "SliderTableViewCell")
-        tableView.register(UINib(nibName: "RepeatableTableViewCell", bundle: nil), forCellReuseIdentifier: "RepeatableTableViewCell")
+        let frameworkBundle = Bundle(for: DynamicTemplateViewController.self)
+        tableView.register(UINib(nibName: "TextfieldComponent", bundle: frameworkBundle), forCellReuseIdentifier: "TextfieldComponent")
+        tableView.register(UINib(nibName: "DropDownTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "DropDownTableViewCell")
+        tableView.register(UINib(nibName: "RadioButtonTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "RadioButtonTableViewCell")
+        tableView.register(UINib(nibName: "CheckBoxTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "CheckBoxTableViewCell")
+        tableView.register(UINib(nibName: "TextViewTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "TextViewTableViewCell")
+        tableView.register(UINib(nibName: "DatePickerTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "DatePickerTableViewCell")
+        tableView.register(UINib(nibName: "MessageTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "MessageTableViewCell")
+        tableView.register(UINib(nibName: "TimePickerTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "TimePickerTableViewCell")
+        tableView.register(UINib(nibName: "PickerTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "PickerTableViewCell")
+        tableView.register(UINib(nibName: "SliderTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "SliderTableViewCell")
+        tableView.register(UINib(nibName: "RepeatableTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "RepeatableTableViewCell")
+        tableView.register(UINib(nibName: "ToggleSwitchTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "ToggleSwitchTableViewCell")
+        tableView.register(UINib(nibName: "AutocompleteTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "AutocompleteTableViewCell")
+
 
         self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         self.tableView.estimatedRowHeight = 100
@@ -164,37 +178,42 @@ extension RepeatableTableViewCell: UITableViewDelegate, UITableViewDataSource {
 
 //            let dropDownSet = ddcModel?.valueSet?.filter{ $0.refID!.localizedCaseInsensitiveContains((data!.valueSetRef)!)}
                 let dropDownSet = ddcModel?.valueSet?[(data!.valueSetRef!)]
-            let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 50
+            let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 51
 
-                return CGFloat(dynamicHeightforRadioCell)
+                return CGFloat(dynamicHeightforRadioCell) + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) + (data!.attributedTitleHeight - 20.5)
 
           } else  if enumerationEntityfieldTypeIs == .checkBox {
 
 //            let dropDownSet = ddcModel?.valueSet?.filter{ $0.refID!.localizedCaseInsensitiveContains((data!.valueSetRef)!)}
 //
               let dropDownSet = ddcModel?.valueSet?[(data!.valueSetRef!)] 
-            let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 50
+            let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 51
 
-                return CGFloat(dynamicHeightforRadioCell)
+              return CGFloat(dynamicHeightforRadioCell) + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) + (data!.attributedTitleHeight - 20.5)
 
           } else if enumerationEntityfieldTypeIs == .dropDownField {
               
-              return 100//UITableView.automaticDimension
+              return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//100//UITableView.automaticDimension
 
            } else if textEntityFieldType == .textareaField {
-            
-            return 200//UITableView.automaticDimension
+            return 200 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
            } else if textEntityFieldType == .datePicker {
                
-               return 100//UITableView.automaticDimension
+               return 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
            } else if messageEntityFieldType == .messageField {
-               return 100//UITableView.automaticDimension
+               return 200//UITableView.automaticDimension
            } else if textEntityFieldType == .timePicker {
-               return 100//UITableView.automaticDimension
+               return 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//UITableView.automaticDimension
            } else if textEntityFieldType == .picker {
-               return 100//UITableView.automaticDimension
+               return 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//UITableView.automaticDimension
            } else if textEntityFieldType == .slider {
-               return 100//UITableView.automaticDimension
+               return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
+           } else if textEntityFieldType == .lineeditField {
+               return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
+           } else if textEntityFieldType == .toggleSwitch {
+               return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
+           } else if textEntityFieldType == .autocomplete {
+               return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
            }
             return 100
     }
@@ -287,7 +306,24 @@ extension RepeatableTableViewCell: UITableViewDelegate, UITableViewDataSource {
                     cell.setupSliderCell(data: ddcModel!, entity: data!,indexPath: indexPath, entityGroupId: self.entityGroup!.uniqueId, parentEntityGroupId: self.parentEntityGroupId,groupOrder: self.entityGroup?.order ?? 0)
                    return cell
 
+               } else if fieldTypeIs == .toggleSwitch {
+                   
+                   let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleSwitchTableViewCell", for: indexPath) as! ToggleSwitchTableViewCell
+    //               cell.uriLbl.attributedText = NSAttributedString(string: (data?.uri)!, attributes:
+    //                              [.underlineStyle: NSUnderlineStyle.single.rawValue])
+                    cell.uriLbl.attributedText = data?.title?.htmlToAttributedString
+                    cell.setupSliderCell(data: ddcModel!, entity: data!,indexPath: indexPath, entityGroupId: ddcModel?.template?.uniqueId ?? "")
+                   return cell
+               } else if fieldTypeIs == .autocomplete {
+                   
+                   let cell = tableView.dequeueReusableCell(withIdentifier: "AutocompleteTableViewCell", for: indexPath) as! AutocompleteTableViewCell
+                   cell.uriLbl.attributedText = data?.title?.htmlToAttributedString
+                   cell.textField.setBottomBorder()
+                   cell.textField.placeholder = "Enter " + (data?.uri)!
+                   cell.setUpTextFieldCell(data: ddcModel!, entity: data!,indexPath: indexPath, entityGroupId: ddcModel?.template?.uniqueId ?? "")
+                   return cell
                }
+
 
 
             } else if data?.type  == .enumerationEntity {
@@ -324,7 +360,6 @@ extension RepeatableTableViewCell: UITableViewDelegate, UITableViewDataSource {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell", for: indexPath) as! MessageTableViewCell
 //                   cell.uriLbl.attributedText = NSAttributedString(string: (data?.uri)!, attributes:
 //                       [.underlineStyle: NSUnderlineStyle.single.rawValue])
-                    cell.uriLbl.attributedText = data?.title?.htmlToAttributedString
 
                     cell.setUpMessageCell(data: ddcModel!, entity: data!,indexPath: indexPath,tableView: self.tableView)
                    

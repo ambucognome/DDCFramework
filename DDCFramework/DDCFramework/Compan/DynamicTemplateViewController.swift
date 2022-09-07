@@ -9,34 +9,56 @@ import UIKit
 import SwiftUI
 
 //Model declared globally
-var ddcModel : DDCFormModel?
+public var ddcModel : DDCFormModel?
 
+//Temporary place for setting reset value
+public var isResetAvailable = false // Show/hide reset button
+public var showValidations = false // validate before submit
+public var isReadOnly = false // read only
+public var showHeader = true // show/hide header
+public var savePerField = true // save per field
+public var headerBackgroundColor = UIColor(red: 168.0/255.0, green: 219.0/255.0, blue: 205.0/255.0, alpha: 1)
+public var headerFontColor = UIColor.white
+public var headerFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+public var username = ""
 
-class DynamicTemplateViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
+var templateURI = ""
+
+public protocol DynamicTemplateViewControllerDelegate {
+    func didSubmitSurvey(params:[String:Any])
+}
+
+public class DynamicTemplateViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var headerLabel: UILabel!
     
+    public var delegate: DynamicTemplateViewControllerDelegate?
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.headerLabel.text = "Welcome \(username)"
+        self.navigationController?.isNavigationBarHidden = true
         // Do any additional setup after loading the view.
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: "DefaultCell")
         tableView.dataSource = self
         
         //Register cell for using in tableview
-        tableView.register(UINib(nibName: "TextfieldComponent", bundle: nil), forCellReuseIdentifier: "TextfieldComponent")
-        tableView.register(UINib(nibName: "DropDownTableViewCell", bundle: nil), forCellReuseIdentifier: "DropDownTableViewCell")
-        tableView.register(UINib(nibName: "RadioButtonTableViewCell", bundle: nil), forCellReuseIdentifier: "RadioButtonTableViewCell")
-        tableView.register(UINib(nibName: "CheckBoxTableViewCell", bundle: nil), forCellReuseIdentifier: "CheckBoxTableViewCell")
-        tableView.register(UINib(nibName: "TextViewTableViewCell", bundle: nil), forCellReuseIdentifier: "TextViewTableViewCell")
-        tableView.register(UINib(nibName: "DatePickerTableViewCell", bundle: nil), forCellReuseIdentifier: "DatePickerTableViewCell")
-        tableView.register(UINib(nibName: "MessageTableViewCell", bundle: nil), forCellReuseIdentifier: "MessageTableViewCell")
-        tableView.register(UINib(nibName: "TimePickerTableViewCell", bundle: nil), forCellReuseIdentifier: "TimePickerTableViewCell")
-        tableView.register(UINib(nibName: "PickerTableViewCell", bundle: nil), forCellReuseIdentifier: "PickerTableViewCell")
-        tableView.register(UINib(nibName: "SliderTableViewCell", bundle: nil), forCellReuseIdentifier: "SliderTableViewCell")
-        tableView.register(UINib(nibName: "RepeatableTableViewCell", bundle: nil), forCellReuseIdentifier: "RepeatableTableViewCell")
+        let frameworkBundle = Bundle(for: DynamicTemplateViewController.self)
+        tableView.register(UINib(nibName: "TextfieldComponent", bundle: frameworkBundle), forCellReuseIdentifier: "TextfieldComponent")
+        tableView.register(UINib(nibName: "DropDownTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "DropDownTableViewCell")
+        tableView.register(UINib(nibName: "RadioButtonTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "RadioButtonTableViewCell")
+        tableView.register(UINib(nibName: "CheckBoxTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "CheckBoxTableViewCell")
+        tableView.register(UINib(nibName: "TextViewTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "TextViewTableViewCell")
+        tableView.register(UINib(nibName: "DatePickerTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "DatePickerTableViewCell")
+        tableView.register(UINib(nibName: "MessageTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "MessageTableViewCell")
+        tableView.register(UINib(nibName: "TimePickerTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "TimePickerTableViewCell")
+        tableView.register(UINib(nibName: "PickerTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "PickerTableViewCell")
+        tableView.register(UINib(nibName: "SliderTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "SliderTableViewCell")
+        tableView.register(UINib(nibName: "RepeatableTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "RepeatableTableViewCell")
+        tableView.register(UINib(nibName: "ToggleSwitchTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "ToggleSwitchTableViewCell")
+        tableView.register(UINib(nibName: "AutocompleteTableViewCell", bundle: frameworkBundle), forCellReuseIdentifier: "AutocompleteTableViewCell")
 
         self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         self.tableView.estimatedRowHeight = 100
@@ -73,35 +95,148 @@ class DynamicTemplateViewController: UIViewController,UITableViewDelegate,UITabl
     }
     
     @objc func notificationAction() {
-           // self.tableView.reloadData()
+//        UIView.performWithoutAnimation {
+//            let loc = tableView.contentOffset
+//            tableView.reloadRows(at: [indexPath], with: .none)
+//            tableView.contentOffset = loc
+//        }
+        DispatchQueue.main.async { 
         UIView.setAnimationsEnabled(false)
-            UIView.performWithoutAnimation {
-                self.tableView.reloadData()
-              //  self.tableView.beginUpdates()
-             //   self.tableView.endUpdates()
-            }
+            let loc = self.tableView.contentOffset
+//            self.tableView.beginUpdates()
+//        self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .none)
+            self.tableView.reloadData()
+//            self.tableView.endUpdates()
+            self.tableView.contentOffset = loc
+       }
+
+//        UIView.setAnimationsEnabled(false)
+//            UIView.performWithoutAnimation {
+//                self.tableView.reloadData()
+//              //  self.tableView.beginUpdates()
+//             //   self.tableView.endUpdates()
+//            }
           }
+    
+    @IBAction func submitBtn(_ sender: Any) {
+        let parameter = ["blueprint": try! ddcModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": "Ambu iOS"] as [String : Any]
+        self.saveTemplateInstance(template: parameter)
+    }
+    
+    @IBAction func resetBtn(_ sender: Any) {
+        let parameter = ["blueprint": try! ddcModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": "Ambu iOS"] as [String : Any]
+        self.resetTemplateInstance(template: parameter)
+    }
+    
+    
+    // Save Template instance
+    func saveTemplateInstance(template: [String:Any]) {
+        if ValidationHelper.shared.checkValidation() == false {
+            showValidations = true
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+            return
+        }
+            var symptomKeys = [String]()
+            let dropDownSet = ddcModel?.valueSet?["symptomSet"]
+            for i in 0..<(dropDownSet?.count ?? 0) {
+                let item = dropDownSet![i]
+                symptomKeys.append(item.keys.first!)
+            }
+        print(template)
+        let jsonData = try! JSONSerialization.data(withJSONObject: template, options: JSONSerialization.WritingOptions.prettyPrinted)
+        let jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
+        print(jsonString)
+
+        ERProgressHud.shared.show()
+                    APIManager.sharedInstance.makeRequestToSaveTemplateInstance(data: jsonData){ (success, response,statusCode)  in
+                        if (success) {
+                            ERProgressHud.shared.hide()
+                            print(response)
+                            if statusCode == 200 {
+                                print(response)
+                                if var dataDic = response as? Dictionary<String, Any> {
+                                    let recordID = dataDic["id"] as? String ?? ""
+                                    let symtoms = dataDic["symptoms"] as? [String] ?? []
+                                    dataDic.removeValue(forKey: "id")
+                                    dataDic.removeValue(forKey: "symptoms")
+                                    dataDic["record_id"] = recordID
+                                    dataDic["project_id"] = recordID
+                                    for key in symptomKeys {
+                                        for sym in symtoms {
+                                            if sym == key {
+                                                dataDic[key] = 1
+                                            } //else {
+//                                                dataDic[key] = NSNull()
+//                                            }
+                                        }
+                                    }
+                                    print(dataDic)
+                                    if let surveyData = survey_data as? Dictionary<String, Any> {
+                                        var newDic = surveyData
+                                        newDic.merge(dict: dataDic)
+                                        print(newDic)
+                                        // self.completeSurvey(surveyDetails: newDic)
+                                        self.navigationController?.popViewController {
+                                            self.delegate?.didSubmitSurvey(params: newDic)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            APIManager.sharedInstance.showAlertWithMessage(message: ERROR_MESSAGE_DEFAULT)
+                            ERProgressHud.shared.hide()
+                        }
+                    }
+        
+    }
+    
+    //Reset Template instance
+    func resetTemplateInstance(template: [String:Any]) {
+        print(template)
+        let jsonData = try! JSONSerialization.data(withJSONObject: template, options: JSONSerialization.WritingOptions.prettyPrinted)
+        let jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
+        print(jsonString)
+
+        ERProgressHud.shared.show()
+                    APIManager.sharedInstance.makeRequestToResetTemplateInstance(data: jsonData){ (success, response,statusCode)  in
+                        if (success) {
+                            ERProgressHud.shared.hide()
+                            if statusCode == 200 {
+                                print(response)
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadAPI"), object: nil)
+
+                        } else {
+                            APIManager.sharedInstance.showAlertWithMessage(message: ERROR_MESSAGE_DEFAULT)
+                            ERProgressHud.shared.hide()
+                        }
+                    }
+                    }
+    }
 
     
 
 // MARK: - UITableViewDataSource
-func numberOfSections(in tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
 //    return (ddcModel?.template?.entities?.count)!
     return (ddcModel?.template?.sortedArray?.count)!
 }
 
-func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if ddcModel?.template?.sortedArray?[section].value.type == .entityGroupRepeatable || ddcModel?.template?.sortedArray?[section].value.type == .entityGroup {
         return ddcModel?.template?.sortedArray?[section].value.sortedEntityGroupsArray?.count ?? 0
     }
     return 1
 }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if showHeader == false {
+            return nil
+        }
         let view = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 50))
-        view.backgroundColor = UIColor(red: 168.0/255.0, green: 219.0/255.0, blue: 205.0/255.0, alpha: 1)
         let titleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: self.tableView.frame.width - 40, height: 50))
-        titleLabel.textColor = .white
+        view.backgroundColor = headerBackgroundColor
+        titleLabel.textColor = headerFontColor
+        titleLabel.font = headerFont
         view.addSubview(titleLabel)
         if ddcModel?.template?.sortedArray?[section].value.type == .entityGroupRepeatable || ddcModel?.template?.sortedArray?[section].value.type == .entityGroup {
             titleLabel.text = ddcModel?.template?.sortedArray?[section].value.title ?? ""
@@ -158,7 +293,10 @@ func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> 
 //        self.tableView.reloadData()
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if showHeader == false {
+            return 0
+        }
         if ddcModel?.template?.sortedArray?[section].value.type == .entityGroupRepeatable || ddcModel?.template?.sortedArray?[section].value.type == .entityGroup {
             return 0
         } else {
@@ -171,7 +309,7 @@ func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> 
     }
 
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var data : Entity?
         if ddcModel?.template?.sortedArray![indexPath.section].value.type == .entityGroupRepeatable {
 //            data = ddcModel?.template?.entities![indexPath.section].entityGroups![0].entities![indexPath.row]
@@ -196,43 +334,47 @@ func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> 
 //        let dropDownSet = ddcModel?.valueSet?.filter{ $0.refID!.localizedCaseInsensitiveContains((data!.valueSetRef)!)}
         let dropDownSet = ddcModel?.valueSet?[(data!.valueSetRef!)]
 
-        let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 100
+        let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 51 + 22
 
-        return CGFloat(dynamicHeightforRadioCell)
-
+            return CGFloat(dynamicHeightforRadioCell) + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) + (data!.attributedTitleHeight - 20.5)
       } else  if enumerationEntityfieldTypeIs == .checkBox {
 
 //        let dropDownSet = ddcModel?.valueSet?.filter{ $0.refID!.localizedCaseInsensitiveContains((data!.valueSetRef)!)}
 //
           let dropDownSet = ddcModel?.valueSet?[(data!.valueSetRef!)]
-        let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 100
+        let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 51 + 22
 
-            return CGFloat(dynamicHeightforRadioCell)
-
+          return CGFloat(dynamicHeightforRadioCell) + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) + (data!.attributedTitleHeight - 20.5)
       } else if enumerationEntityfieldTypeIs == .dropDownField {
           
-          return 100//UITableView.automaticDimension
+          return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//100//UITableView.automaticDimension
 
        } else if textEntityFieldType == .textareaField {
-        
-        return 200//UITableView.automaticDimension
+        return 200 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//UITableView.automaticDimension
        } else if textEntityFieldType == .datePicker {
            
-           return 100//UITableView.automaticDimension
+           return 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//UITableView.automaticDimension
        } else if messageEntityFieldType == .messageField {
-           return 220//UITableView.automaticDimension
+           if indexPath.section == 0 {return 50}
+           return 200 //+ ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//UITableView.automaticDimension
        } else if textEntityFieldType == .timePicker {
-           return 100//UITableView.automaticDimension
+           return 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//UITableView.automaticDimension
        } else if textEntityFieldType == .picker {
-           return 100//UITableView.automaticDimension
+           return 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!)//UITableView.automaticDimension
        } else if textEntityFieldType == .slider {
-           return 100//UITableView.automaticDimension
+           return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
+       } else if textEntityFieldType == .lineeditField {
+           return 85 + ComponentUtils.getResetHeight()  + ComponentUtils.getErrorMessageHeight(entity: data!)//UITableView.automaticDimension
+       } else if textEntityFieldType == .toggleSwitch {
+           return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
+       } else if textEntityFieldType == .autocomplete {
+           return 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: data!) //UITableView.automaticDimension
        }
 
         return 100
 }
     
-func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 let cellIdentifier = "DefaultCell"
 
@@ -316,7 +458,25 @@ if cell == nil {
                 cell.setupSliderCell(data: ddcModel!, entity: data!,indexPath: indexPath, entityGroupId: ddcModel?.template?.uniqueId ?? "")
                return cell
 
-           }
+           } else if fieldTypeIs == .toggleSwitch {
+               
+               let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleSwitchTableViewCell", for: indexPath) as! ToggleSwitchTableViewCell
+//               cell.uriLbl.attributedText = NSAttributedString(string: (data?.uri)!, attributes:
+//                              [.underlineStyle: NSUnderlineStyle.single.rawValue])
+                cell.uriLbl.attributedText = data?.title?.htmlToAttributedString
+                cell.setupSliderCell(data: ddcModel!, entity: data!,indexPath: indexPath, entityGroupId: ddcModel?.template?.uniqueId ?? "")
+               return cell
+
+           } else if fieldTypeIs == .autocomplete {
+               
+               let cell = tableView.dequeueReusableCell(withIdentifier: "AutocompleteTableViewCell", for: indexPath) as! AutocompleteTableViewCell
+//                cell.uriLbl.attributedText = NSAttributedString(string: (data?.uri)!, attributes:
+//                    [.underlineStyle: NSUnderlineStyle.single.rawValue])
+               cell.uriLbl.attributedText = data?.title?.htmlToAttributedString
+               cell.textField.setBottomBorder()
+               cell.setUpTextFieldCell(data: ddcModel!, entity: data!,indexPath: indexPath, entityGroupId: ddcModel?.template?.uniqueId ?? "")
+               return cell
+       }
 
 
         } else if data?.type  == .enumerationEntity {
@@ -352,7 +512,6 @@ if cell == nil {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell", for: indexPath) as! MessageTableViewCell
 //               cell.uriLbl.attributedText = NSAttributedString(string: (data?.uri)!, attributes:
 //                   [.underlineStyle: NSUnderlineStyle.single.rawValue])
-                cell.uriLbl.attributedText = data?.title?.htmlToAttributedString
                 cell.setUpMessageCell(data: ddcModel!, entity: data!,indexPath: indexPath,tableView: self.tableView)
 
                 return cell
@@ -366,7 +525,7 @@ if cell == nil {
 }
 
 // MARK: - UITableViewDelegate
-func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 }
 

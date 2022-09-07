@@ -12,18 +12,12 @@
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="MessageTableViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageTableViewCell" rowHeight="155" id="H3Z-SM-CPW" userLabel="TextfieldComponent" customClass="MessageTableViewCell" customModule="Compan" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="372" height="155"/>
             <autoresizingMask key="autoresizingMask"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="H3Z-SM-CPW" id="Z4h-QT-f8o">
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="H3Z-SM-CPW" id="Z4h-QT-f8o">
                 <rect key="frame" x="0.0" y="0.0" width="372" height="155"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hmx-df-Z6F">
-                        <rect key="frame" x="20" y="20" width="332" height="15"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yl9-fY-12Z">
-                        <rect key="frame" x="20" y="45" width="332" height="100"/>
+                        <rect key="frame" x="20" y="10" width="332" height="100"/>
                         <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="100" id="EmN-JB-xl5"/>
@@ -36,18 +30,14 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstItem="Yl9-fY-12Z" firstAttribute="top" secondItem="hmx-df-Z6F" secondAttribute="bottom" constant="10" id="7uI-bX-8PT"/>
-                    <constraint firstItem="Yl9-fY-12Z" firstAttribute="trailing" secondItem="hmx-df-Z6F" secondAttribute="trailing" id="FGV-p4-yW0"/>
                     <constraint firstAttribute="bottom" secondItem="Yl9-fY-12Z" secondAttribute="bottom" constant="10" id="KFO-24-Ugg"/>
-                    <constraint firstItem="hmx-df-Z6F" firstAttribute="top" secondItem="Z4h-QT-f8o" secondAttribute="top" constant="20" id="PEp-Qj-2iQ"/>
-                    <constraint firstItem="Yl9-fY-12Z" firstAttribute="leading" secondItem="hmx-df-Z6F" secondAttribute="leading" id="WWp-Ss-HOJ"/>
-                    <constraint firstItem="hmx-df-Z6F" firstAttribute="leading" secondItem="Z4h-QT-f8o" secondAttribute="leading" constant="20" id="gVu-ee-xSD"/>
-                    <constraint firstAttribute="trailing" secondItem="hmx-df-Z6F" secondAttribute="trailing" constant="20" id="rPR-O6-o4s"/>
+                    <constraint firstItem="Yl9-fY-12Z" firstAttribute="leading" secondItem="Z4h-QT-f8o" secondAttribute="leading" constant="20" symbolic="YES" id="gh0-kx-4fX"/>
+                    <constraint firstAttribute="trailing" secondItem="Yl9-fY-12Z" secondAttribute="trailing" constant="20" symbolic="YES" id="iGo-rO-728"/>
+                    <constraint firstItem="Yl9-fY-12Z" firstAttribute="top" secondItem="Z4h-QT-f8o" secondAttribute="top" constant="10" id="m63-0m-fMT"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="uriLbl" destination="hmx-df-Z6F" id="vG3-tT-P54"/>
                 <outlet property="webView" destination="Yl9-fY-12Z" id="pvu-fA-FAp"/>
                 <outlet property="webViewHeight" destination="EmN-JB-xl5" id="kyN-wH-oI5"/>
             </connections>

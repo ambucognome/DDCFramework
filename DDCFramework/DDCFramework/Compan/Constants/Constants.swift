@@ -10,13 +10,21 @@ import Foundation
 import UIKit
 
 //Base Url
-let BASEURL = "http://10.85.9.161:9198/"
+let BASEURL = "http://192.168.199.83:8085/"
 let API_END_GET_TEMPLATE = "getTemplate"
-let API_END_LOGIN = "/login"
 let API_END_UPDATE_ENTITY_VALUE = "updateTemplateEntity"
 let API_END_ADD_REPEATABLE_ENTITY_GROUP = "addRepeatableEntityGroup"
 let API_END_DELETE_REPEATABLE_ENTITY_GROUP = "deleteRepeatableEntityGroup"
 let API_END_EXCUTE_DDC_SCRIPT = "executeDDCScript"
+let API_END_SAVE_TEMPLATE_INSTANCE = "saveTemplateInstance"
+let API_END_RESET_TEMPLATE_INSTANCE = "resetTemplateInstance"
+
+
+let FLOW_BASE_URL = "http://192.168.199.83:8081"//"https://safecheckbackend.azurewebsites.net"//"http://192.168.199.83:8081"//
+let API_END_LOGIN = "/login"
+let API_END_START_SURVEY = "/startSurvey"
+let API_END_COMPLETE_SURVEY = "/completeSurvey"
+
 
 // All NSUSERDEFAULT key name
 // Token Nsuserdefault key name
@@ -25,6 +33,8 @@ let STORED_TOKEN_KEYNAME = "tokenkey"
 let UserId = "UserId"
 //UserName Nsuserdefault key name
 let USERNAME = "USERNAME"
+
+let LOGIN_DATA = "loginData"
 
 
 // Loading Error display messages
@@ -86,7 +96,7 @@ let FADED_BLUE = UIColor(red: 97.0 / 255.0, green: 144.0 / 255.0, blue: 185.0 / 
 
 //Temperory HArdcoded token
 let TEMP_TOKEN_KEY = "Authorization"
-let TEMP_TOKEN_VALUE = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoidGVzdCIsImlkIjoiNjI3MTI0OGRiN2QyNTE2YjMyMzUzZmNlIiwiaWF0IjoxNjUxNTgyMDkzfQ.eFwwsyvr-n0huDnbJtyltEDB1zeFFxD1fVSXxQHUtDQ"
+let TEMP_TOKEN_VALUE = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoiY292aWRfc2FmZWNoZWNrX2Nsb3VkIiwiaWQiOiI2MmVjMzE4YTFlNjZmMTQyZjg0N2VhMDkiLCJpYXQiOjE2NTk2NDYzNDZ9.Jyu7J6G0TlCo_i_7KAZAhpJDALA-yHYG-0kp_WaJoWA"//"Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoidGVzdCIsImlkIjoiNjI3MTI0OGRiN2QyNTE2YjMyMzUzZmNlIiwiaWF0IjoxNjUxNTgyMDkzfQ.eFwwsyvr-n0huDnbJtyltEDB1zeFFxD1fVSXxQHUtDQ"
 
 
 // MARK: Error Codes And Strings

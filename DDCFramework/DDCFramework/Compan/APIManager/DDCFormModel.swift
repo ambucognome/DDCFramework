@@ -12,7 +12,7 @@ import SwiftUI
 
 //Map<String, List<Map<String, String>>>
 // MARK: - DDCFormModel
-class DDCFormModel: Codable {
+public class DDCFormModel: Codable {
     let template: Template?
     let valueSet: Dictionary<String,[Dictionary<String, String>]>?//[ValueSet]?
     let isCreated: Bool?
@@ -35,7 +35,7 @@ class DDCFormModel: Codable {
         self.version = version
     }
     
-    required init(from decoder: Decoder) throws {
+    required public init(from decoder: Decoder) throws {
            let container = try decoder.container(keyedBy: CodingKeys.self)
         self.template = try? container.decodeIfPresent(Template.self, forKey: .template)
         self.valueSet = try? container.decodeIfPresent(Dictionary<String,[Dictionary<String, String>]>.self, forKey: .valueSet)
@@ -112,15 +112,21 @@ class Entity: Codable {
     let isVisible : String?
     let calculation: String?
     var isHidden : Bool = false
+    var required : Bool? = false
+    var errorMessage : String?
+    var onValue : String?
+    var attributedTitleHeight : CGFloat = 0
     
     enum CodingKeys: String, CodingKey {
     
         case entityGroups = "entity_groups"
         case type, title, active, order, guiControlType, id, value, oldValue, lastUpdatedBy, lastUpdatedDate, uri, valueSetRef, settings, isVisible
         case calculation
+        case required, errorMessage, onValue
     }
 
-    init(type: TypeEnum?, title: String?, active: Bool?, order: Int?, guiControlType: String?, id: String?, value: AnyCodable?, oldValue: AnyCodable?, lastUpdatedBy: String?, lastUpdatedDate: Int?, uri: String?, valueSetRef: String?, settings: Settings?,entityGroups: [Dictionary<String, EntityRepeatableGroup>]? ,isRepeated: Bool?,isVisible: String?,calculation: String?) {
+    init(type: TypeEnum?, title: String?, active: Bool?, order: Int?, guiControlType: String?, id: String?, value: AnyCodable?, oldValue: AnyCodable?, lastUpdatedBy: String?, lastUpdatedDate: Int?, uri: String?, valueSetRef: String?, settings: Settings?,entityGroups: [Dictionary<String, EntityRepeatableGroup>]? ,isRepeated: Bool?,isVisible: String?,calculation: String?, required: Bool?,errorMessage: String?, onValue: String?
+    ) {
         self.type = type
         self.title = title
         self.active = active
@@ -138,6 +144,8 @@ class Entity: Codable {
         self.isRepeated = isRepeated
         self.isVisible = isVisible
         self.calculation = calculation
+        self.required = required
+        self.errorMessage = errorMessage
 
         for object in self.entityGroups ?? [] {
             for item in object {
@@ -150,7 +158,7 @@ class Entity: Codable {
         }
         
         self.sortedEntityGroupsArray = sortedEntityGroupsArray?.sorted{ $0.value.order ?? 0 < $1.value.order ?? 0}
-
+        self.onValue = onValue
 
     }
     
@@ -186,7 +194,12 @@ class Entity: Codable {
         }
         
         self.sortedEntityGroupsArray = sortedEntityGroupsArray?.sorted{ $0.value.order ?? 0 < $1.value.order ?? 0}
-
+        let isRequired = try? container.decodeIfPresent(Bool.self, forKey: .required)
+        self.required = isRequired ?? false
+        self.errorMessage = try? container.decodeIfPresent(String.self, forKey: .errorMessage)
+        self.onValue = try? container.decodeIfPresent(String.self, forKey: .onValue)
+        let height = Utilities.getLableHeightRuntime(attributedText: self.title?.htmlToAttributedString)
+        self.attributedTitleHeight = height
     }
     
     
@@ -289,26 +302,50 @@ class EntityRepeatableGroup: Codable {
     }
 
 
-
 // MARK: - Settings
 class Settings: Codable {
     let timeFormat, dateFormat: String?
-    let min, max, step: Int?
+    let min, max, precision: Int?
+    let step: Double?
+    let placeholderText, url: String?
+    let suffix: Suffix?
+
 
     enum CodingKeys: String, CodingKey {
         case timeFormat = "time-format"
         case dateFormat = "date-format"
-        case min, max, step
+        case min, max, precision
+        case step
+        case placeholderText, url
+        case suffix
     }
 
-    init(timeFormat: String?, dateFormat: String?, min: Int?, max: Int?, step: Int?) {
+    init(timeFormat: String?, dateFormat: String?, min: Int?, max: Int?, step: Double?, placeholderText: String?, url: String?,suffix: Suffix?, precision: Int?) {
         self.timeFormat = timeFormat
         self.dateFormat = dateFormat
         self.min = min
         self.max = max
         self.step = step
+        self.placeholderText = placeholderText
+        self.url = url
+        self.suffix = suffix
+        self.precision = precision
     }
 }
+
+// MARK: - Suffix
+class Suffix: Codable {
+    var text: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case text
+    }
+
+    init(text: String?) {
+        self.text = text
+    }
+}
+
 
 enum TypeEnum: String, Codable {
     case enumerationEntity = "EnumerationEntity"

@@ -27,6 +27,8 @@ class APIManager : NSObject {
         case addRepeatableEntityGroup(Data)
         case deleteRepeatableEntityGroup(Data)
         case excuteDDCScript(Data)
+        case saveTemplate(Data)
+        case resetTemplate(Data)
 
         // Api Methods
         var method: HTTPMethod {
@@ -43,6 +45,10 @@ class APIManager : NSObject {
                 return .delete
             case .excuteDDCScript:
                 return .post
+            case .saveTemplate:
+                return .post
+            case .resetTemplate:
+                return .delete
             }
         }
             
@@ -61,6 +67,10 @@ class APIManager : NSObject {
                 return API_END_DELETE_REPEATABLE_ENTITY_GROUP
             case .excuteDDCScript(_):
                 return API_END_EXCUTE_DDC_SCRIPT
+            case .saveTemplate:
+                return API_END_SAVE_TEMPLATE_INSTANCE
+            case .resetTemplate:
+                return API_END_RESET_TEMPLATE_INSTANCE
             }
         }
         
@@ -70,9 +80,10 @@ class APIManager : NSObject {
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = method.rawValue
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
+
             urlRequest.addValue(TEMP_TOKEN_VALUE, forHTTPHeaderField: TEMP_TOKEN_KEY)
-            
+//            urlRequest.setValue("Bearer \(Utilities.getToken())", forHTTPHeaderField: "Authorization")
+
             switch self {
             case .loginUser(let parameters):
                 urlRequest = try JSONEncoding.default.encode(urlRequest, with: parameters)
@@ -90,6 +101,12 @@ class APIManager : NSObject {
                 urlRequest.httpBody = data
                 return urlRequest
             case .excuteDDCScript(let data):
+                urlRequest.httpBody = data
+                return urlRequest
+            case .saveTemplate(let data):
+                urlRequest.httpBody = data
+                return urlRequest
+            case .resetTemplate(let data):
                 urlRequest.httpBody = data
                 return urlRequest
             }
@@ -278,6 +295,54 @@ class APIManager : NSObject {
                 }
             case .failure( _):
                 completion(false,false,0)
+            }
+        }
+    }
+
+    // Save template instance
+    // completion : Completion object to return parameters to the calling functions
+    // Returns
+    func makeRequestToSaveTemplateInstance(data:Data,completion: @escaping completionHandlerWithStatusCode) {
+        Alamofire.request(Router.saveTemplate(data)).responseJSON { response in
+            switch response.result {
+            case .success(let JSON):
+                ERProgressHud.shared.hide()
+                let statusCode = response.response?.statusCode
+                guard let jsonData =  JSON  as? NSDictionary else {
+                    APIManager.sharedInstance.showAlertWithMessage(message: ERROR_MESSAGE_DEFAULT)
+                    return
+                }
+                if statusCode == SUCCESS_CODE_200{
+                    completion(true, jsonData, statusCode!)
+                } else {
+                    APIManager.sharedInstance.showAlertWithMessage(message: self.choooseMessageForErrorCode(errorCode: statusCode!))
+                }
+            case .failure( _):
+                completion(true,[:],0)
+            }
+        }
+    }
+    
+    // Reset template instance
+    // completion : Completion object to return parameters to the calling functions
+    // Returns
+    func makeRequestToResetTemplateInstance(data:Data,completion: @escaping completionHandlerWithStatusCode) {
+        Alamofire.request(Router.resetTemplate(data)).responseJSON { response in
+            switch response.result {
+            case .success(let JSON):
+                ERProgressHud.shared.hide()
+                let statusCode = response.response?.statusCode
+                guard let jsonData =  JSON  as? NSDictionary else {
+                    APIManager.sharedInstance.showAlertWithMessage(message: ERROR_MESSAGE_DEFAULT)
+                    return
+                }
+                if statusCode == SUCCESS_CODE_200{
+                    completion(true, jsonData, statusCode!)
+                } else {
+                    APIManager.sharedInstance.showAlertWithMessage(message: self.choooseMessageForErrorCode(errorCode: statusCode!))
+                }
+            case .failure( _):
+                completion(true,[:],0)
             }
         }
     }

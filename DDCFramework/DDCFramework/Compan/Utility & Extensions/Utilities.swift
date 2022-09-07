@@ -38,7 +38,50 @@ class Utilities: NSObject {
         }
         return nil
     }
+    
+    class func convertDateToTimestamp(date : String) -> String {
+        let myFormatter = DateFormatter()
+        myFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        let newDate = myFormatter.date(from: date)
+        let timestamp = newDate!.millisecondsSince1970
+        return String(timestamp)
+    }
+    
 
+    class func getDayFromTimeStamp(date: Date,timezone:TimeZone = .current) -> String {
+        //Date formatting
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.long
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "EEEE"
+        dateFormatter.timeZone = timezone
+        let dateString = dateFormatter.string(from: date as Date)
+        return dateString
+    }
+    
+    class func getDateFromTimeStamp(date: Date,timezone:TimeZone = .current) -> String {
+        //Date formatting
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.long
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "MMMM d, yyyy"
+        dateFormatter.timeZone = timezone
+        let dateString = dateFormatter.string(from: date as Date)
+        return dateString
+    }
+    
+    class func getTimeFromTimeStamp(date: Date,timezone:TimeZone = .current) -> String {
+        //Date formatting
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.long
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.timeZone = timezone
+        let dateString = dateFormatter.string(from: date as Date)
+        return dateString
+    }
+    
+    
     
     func calculateGroupHeightCell(tableView: UITableView, entityGroup: EntityRepeatableGroup,data: DDCFormModel) -> CGFloat {
         var totalHeight : CGFloat = 0
@@ -48,11 +91,13 @@ class Utilities: NSObject {
             if entity.value.type == .entityGroupRepeatable || entity.value.type == .entityGroup {
                 for group in entity.value.sortedEntityGroupsArray ?? [] {
                     totalHeight += self.getEntityHeigh(entityGroup: group.value, data: data)
-
                 }
             }
         }
-        return totalHeight + 50
+        if showHeader == true {
+            return totalHeight + 50
+        }
+        return totalHeight
     }
     
     
@@ -67,7 +112,10 @@ class Utilities: NSObject {
                 }
             }
         }
-        return totalHeight + 50
+        if showHeader == true {
+            return totalHeight + 50
+        }
+        return totalHeight 
     }
     
     
@@ -93,9 +141,9 @@ class Utilities: NSObject {
 //
             let dropDownSet = data.valueSet?[(entity.value.valueSetRef!)]
 
-        let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 50
+        let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 51
 //
-            totalHeight += CGFloat(dynamicHeightforRadioCell)
+            totalHeight += CGFloat(dynamicHeightforRadioCell) + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData) + (entityData.attributedTitleHeight - 20.5)
 //            totalHeight += 100
 
       } else  if enumerationEntityfieldTypeIs == .checkBox {
@@ -103,34 +151,65 @@ class Utilities: NSObject {
 //        let dropDownSet = data.valueSet?.filter{ $0.refID!.localizedCaseInsensitiveContains((entity.valueSetRef)!)}
           let dropDownSet = data.valueSet?[(entity.value.valueSetRef!)]
 
-      let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 50
+      let dynamicHeightforRadioCell = dropDownSet!.count * 50 + 51
 //
-          totalHeight += CGFloat(dynamicHeightforRadioCell)
+          totalHeight += CGFloat(dynamicHeightforRadioCell) + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData) + (entityData.attributedTitleHeight - 20.5)
 
       } else if enumerationEntityfieldTypeIs == .dropDownField {
           
-          totalHeight += 100//UITableView.automaticDimension
+          totalHeight += 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData)//UITableView.automaticDimension
 
        } else if textEntityFieldType == .textareaField {
         
-           totalHeight += 200//UITableView.automaticDimension
+           totalHeight += 200 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData)//UITableView.automaticDimension
        } else if textEntityFieldType == .datePicker {
            
-           totalHeight += 100//UITableView.automaticDimension
+           totalHeight += 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData)//UITableView.automaticDimension
        } else if messageEntityFieldType == .messageField {
-           totalHeight += 100//UITableView.automaticDimension
+           totalHeight += 200 //UITableView.automaticDimension
        } else if textEntityFieldType == .timePicker {
-           totalHeight += 100//UITableView.automaticDimension
+           totalHeight += 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData)//UITableView.automaticDimension
        } else if textEntityFieldType == .picker {
-           totalHeight += 100//UITableView.automaticDimension
+           totalHeight += 91 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData)//UITableView.automaticDimension
        } else if textEntityFieldType == .slider {
-           totalHeight += 100//UITableView.automaticDimension
+           totalHeight += 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData) //UITableView.automaticDimension
+       } else if textEntityFieldType == .toggleSwitch {
+           totalHeight += 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData) //UITableView.automaticDimension
+       } else if textEntityFieldType == .lineeditField {
+           totalHeight += 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData) //UITableView.automaticDimension
+       } else if textEntityFieldType == .autocomplete {
+           totalHeight += 85 + ComponentUtils.getResetHeight() + ComponentUtils.getErrorMessageHeight(entity: entityData) //UITableView.automaticDimension
        } else {
            totalHeight += 100
        }
         }
         }
         return totalHeight
-        
+    }
+    
+    //Calculate label height
+    class func getLableHeightRuntime(attributedText : NSAttributedString?) -> CGFloat {
+        let width = UIScreen.main.bounds.width - 40
+          let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let boundingBox = attributedText?.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, context: nil)
+        return ceil(boundingBox?.height ?? 10)
+      }
+    
+    
+    // Save the token
+    // Params :
+    // token : It is the string which is to be saved
+    class func setToken(token : String){
+        UserDefaults.standard.set(token, forKey: "token")
+    }
+    
+    // Fetch the token
+    class func getToken() -> String {
+        let defaults = UserDefaults.standard
+        guard let userToken =  defaults.value(forKey: "token") as? String else {
+            //APIManager.sharedInstance.showAlertWithMessage(message: ERROR_MESSAGE_DEFAULT)
+            return ""
+        }
+        return userToken
     }
 }

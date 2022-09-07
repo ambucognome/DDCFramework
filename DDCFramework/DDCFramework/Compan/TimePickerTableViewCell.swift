@@ -11,6 +11,10 @@ import DatePickerDialog
 class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var uriLbl: UILabel!
+    @IBOutlet weak var resetBtn: UIButton!
+    @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet weak var errorLabelHeight: NSLayoutConstraint!
+
 
     let datePicker = DatePickerDialog()
     var data : DDCFormModel?
@@ -34,6 +38,10 @@ class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func setUpTimePickerCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
+        self.isUserInteractionEnabled = true
+        if isReadOnly {
+            self.isUserInteractionEnabled = false
+        }
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
@@ -49,7 +57,23 @@ class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
 //        }
         
         self.textField.text = (dataa?.value?.value as? String) ?? ""
+        self.resetBtn.isHidden = true
+        if isResetAvailable {
+            self.resetBtn.isHidden = false
     }
+        self.errorLabel.isHidden = true
+        self.errorLabelHeight.constant = 0
+        if ComponentUtils.showErrorMessage(entity: entity) {
+            self.errorLabel.text = entity.errorMessage
+            self.errorLabel.isHidden = false
+            self.errorLabelHeight.constant = 12
+        }
+
+    }
+        
+        @IBAction func resetBtn(_ sender: Any) {
+            RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: "", entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
+        }
     
     func datePickerTapped() {
         let currentDate = Date()
@@ -81,6 +105,9 @@ class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
         }
         return true
     }
+        
+    
+
 }
 
 

@@ -19,7 +19,10 @@ class CheckBoxTableViewCell: UITableViewCell {
 
     @IBOutlet var selectionList: SelectionList!
     @IBOutlet weak var uriLbl: UILabel!
-    
+    @IBOutlet weak var resetBtn: UIButton!
+    @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet weak var errorLabelHeight: NSLayoutConstraint!
+
     var data : DDCFormModel?
     var indexPath : IndexPath?
     var entity : Entity?
@@ -43,6 +46,10 @@ class CheckBoxTableViewCell: UITableViewCell {
     }
     
     func setUpCheckBoxCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
+        self.isUserInteractionEnabled = true
+        if isReadOnly {
+            self.isUserInteractionEnabled = false
+        }
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
@@ -86,7 +93,8 @@ class CheckBoxTableViewCell: UITableViewCell {
 
         //Set title
         //uriLbl.text = data.template?.entities?[index].uri
-
+        selectionList.tableView.isScrollEnabled = false
+        selectionList.rowHeight = 50
         selectionList.items = fieldValueArray
         selectionList.allowsMultipleSelection = true
         selectionList.addTarget(self, action: #selector(selectionChanged), for: .valueChanged)
@@ -97,14 +105,29 @@ class CheckBoxTableViewCell: UITableViewCell {
         if let indexes = selectedIndex {
             selectionList.selectedIndexes = indexes
         }
-
+        
+        self.resetBtn.isHidden = true
+        if isResetAvailable {
+            self.resetBtn.isHidden = false
+        }
+        self.errorLabel.isHidden = true
+        self.errorLabelHeight.constant = 0
+        if ComponentUtils.showErrorMessage(entity: entity) {
+            self.errorLabel.text = entity.errorMessage
+            self.errorLabel.isHidden = false
+            self.errorLabelHeight.constant = 12
+        }
     }
 
     @objc func selectionChanged() {
         print(selectionList.selectedIndexes)
         var values = [String]()
         for index in selectionList.selectedIndexes {
-            values.append(self.fieldIdArray[index])
+//            if self.fieldValueArray[index].lowercased() == "none" {
+//                values = [self.fieldIdArray[index]]
+//            } else {
+                values.append(self.fieldIdArray[index])
+//            }
         }
         print(values)
 //        let valueString = values.joined(separator: ",")
@@ -112,5 +135,11 @@ class CheckBoxTableViewCell: UITableViewCell {
         RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: values, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
 
     }
-
+    
+    @IBAction func resetBtn(_ sender: Any) {
+        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: "", entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
+    }
+    
 }
+
+

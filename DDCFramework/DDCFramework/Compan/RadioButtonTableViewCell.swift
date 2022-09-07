@@ -12,7 +12,10 @@ class RadioButtonTableViewCell: UITableViewCell {
 
     @IBOutlet var selectionList: SelectionList!
     @IBOutlet weak var uriLbl: UILabel!
-    
+    @IBOutlet weak var resetBtn: UIButton!
+    @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet weak var errorLabelHeight: NSLayoutConstraint!
+
     var data : DDCFormModel?
     var indexPath : IndexPath?
     var entity : Entity?
@@ -36,6 +39,10 @@ class RadioButtonTableViewCell: UITableViewCell {
     }
     
     func setUpRadioCell(data: DDCFormModel,entity: Entity, indexPath: IndexPath ,entityGroupId: String,parentEntityGroupId:String = "99",groupOrder: Int = 0) {
+        self.isUserInteractionEnabled = true
+        if isReadOnly {
+            self.isUserInteractionEnabled = false
+        }
         self.entityGroupId = entityGroupId
         self.entity = entity
         self.data = data
@@ -76,6 +83,8 @@ class RadioButtonTableViewCell: UITableViewCell {
 //        selectionList.selectedIndexes = []
 
         selectionList.allowsMultipleSelection = false
+        selectionList.tableView.isScrollEnabled = false
+        selectionList.rowHeight = 50
         selectionList.addTarget(self, action: #selector(selectionChanged), for: .valueChanged)
         selectionList.setupCell = { (cell: UITableViewCell, _: Int) in
             cell.textLabel?.textColor = .gray
@@ -86,6 +95,18 @@ class RadioButtonTableViewCell: UITableViewCell {
         
     
         print("label height", self.uriLbl.frame)
+        self.resetBtn.isHidden = true
+        if isResetAvailable {
+            self.resetBtn.isHidden = false
+        }
+        self.errorLabel.isHidden = true
+        self.errorLabelHeight.constant = 0
+        if ComponentUtils.showErrorMessage(entity: entity) {
+            self.errorLabel.text = entity.errorMessage
+            self.errorLabel.isHidden = false
+            self.errorLabelHeight.constant = 12
+        }
+
     }
 
     @objc func selectionChanged() {
@@ -95,6 +116,11 @@ class RadioButtonTableViewCell: UITableViewCell {
 //        RequestHelper.shared.createRequestForEntity(data: self.data!, index: self.indexPath!, newValue: newValue)
         RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: newValue, entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
 
+    }
+    
+    
+    @IBAction func resetBtn(_ sender: Any) {
+        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: "", entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
     }
 
 }

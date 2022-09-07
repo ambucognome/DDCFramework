@@ -531,6 +531,27 @@ extension Encodable {
         }
     }
     
+    var convertToData: Data? {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+        do {
+            let jsonData = try jsonEncoder.encode(self)
+            if let json = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers),
+               let jsonData = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted) {
+//                let prettyString = (String(decoding: jsonData, as: UTF8.self))
+//                print(prettyString)
+                // Convert to a string and print
+                return jsonData
+
+            } else {
+                print("json data malformed")
+                return nil
+            }
+        } catch {
+            return nil
+        }
+    }
+    
 }
 
 extension String {
@@ -554,4 +575,38 @@ extension UILabel {
         let lineHeight = font.lineHeight
         return Int(ceil(textHeight / lineHeight))
     }
+}
+
+
+extension UserDefaults {
+  func setCodableObject<T: Codable>(_ data: T?, forKey defaultName: String) {
+    let encoded = try? JSONEncoder().encode(data)
+    set(encoded, forKey: defaultName)
+  }
+    
+    func codableObject<T : Codable>(dataType: T.Type, key: String) -> T? {
+      guard let userDefaultData = data(forKey: key) else {
+        return nil
+      }
+      return try? JSONDecoder().decode(T.self, from: userDefaultData)
+    }
+}
+
+extension Date {
+    var millisecondsSince1970:Int64 {
+        Int64((self.timeIntervalSince1970 * 1000.0).rounded())
+    }
+    
+    init(milliseconds:Int64) {
+        self = Date(timeIntervalSince1970: TimeInterval(milliseconds) / 1000)
+    }
+}
+
+extension UINavigationController {
+func popViewController(animated:Bool = true, completion: @escaping ()->()) {
+    CATransaction.begin()
+    CATransaction.setCompletionBlock(completion)
+    self.popViewController(animated: animated)
+    CATransaction.commit()
+}
 }

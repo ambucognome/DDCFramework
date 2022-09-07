@@ -92,6 +92,7 @@ extension _AnyEncodable {
             try container.encode(double)
         case let string as String:
             try container.encode(string)
+            
         #if canImport(Foundation)
         case let number as NSNumber:
             try encode(nsnumber: number, into: &container)
@@ -182,6 +183,8 @@ extension AnyEncodable: Equatable {
             return lhs == rhs
         case let (lhs as [AnyEncodable], rhs as [AnyEncodable]):
             return lhs == rhs
+        case let (lhs as [String], rhs as [String]):
+            return lhs == rhs
         default:
             return false
         }
@@ -245,6 +248,10 @@ extension _AnyEncodable {
     public init(stringLiteral value: String) {
         self.init(value)
     }
+    
+    public init(stringArrayLiteral value: [String]) {
+        self.init(value)
+    }
 
     public init(arrayLiteral elements: Any...) {
         self.init(elements)
@@ -252,6 +259,10 @@ extension _AnyEncodable {
 
     public init(dictionaryLiteral elements: (AnyHashable, Any)...) {
         self.init([AnyHashable: Any](elements, uniquingKeysWith: { first, _ in first }))
+    }
+    
+    public init(stringDictionaryLiteral elements: [String: Any]) {
+        self.init(elements)
     }
 }
 
@@ -290,6 +301,9 @@ extension AnyEncodable: Hashable {
             hasher.combine(value)
         case let value as [AnyEncodable]:
             hasher.combine(value)
+        case let value as [String]:
+            hasher.combine(value)
+
         default:
             break
         }

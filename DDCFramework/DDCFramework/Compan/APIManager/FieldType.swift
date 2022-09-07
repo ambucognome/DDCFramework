@@ -31,6 +31,8 @@ enum TextEntryEntityFieldType: String {
     case timePicker = "timepicker"
     case picker = "spinbox"
     case slider = "slider"
+    case toggleSwitch = "toggleswitch"
+    case autocomplete = "autocomplete"
 }
 
 enum MessageEntityFieldType: String {
@@ -102,6 +104,10 @@ class ComponentUtils : NSObject {
                 return .picker
             } else if fieldTypeIs == "slider" {
                 return .slider
+            } else if fieldTypeIs == "toggleswitch" {
+                return .toggleSwitch
+            }  else if fieldTypeIs == "autocomplete" {
+                return .autocomplete
             }
         }
         return .noMatchEntity
@@ -133,6 +139,59 @@ class ComponentUtils : NSObject {
         }
         return .noMatchEntity
     }
+    
+    class func getResetHeight() ->  CGFloat {
+            if isResetAvailable {
+                return 20
+            }
+        return 0
+    }
+    
+    
+    class func showErrorMessage(entity: Entity) ->  Bool {
+            if showValidations {
+                if (entity.required ?? false) == true && (entity.isHidden == false) {
+                    let value = entity.value?.value
+                    if let valueStr = value as? String, valueStr == "" {
+                        return true
+                    } else if let valueArray = value as? [String], valueArray.count == 0 {
+                        return true
+                    }
+                } else {
+                    return false
+                }
+            }
+        return false
+    }
+    
+    class func isValueEmpty(entity: Entity) ->  Bool {
+        if (entity.required ?? false) == true && (entity.isHidden == false){
+                    let value = entity.value?.value
+                    if let valueStr = value as? String, valueStr == "" {
+                        return true
+                    } else if let valueArray = value as? [String], valueArray.count == 0 {
+                        return true
+                    }
+                }
+                return false
+        }
+    
+    class func getErrorMessageHeight(entity: Entity) ->  CGFloat {
+            if showValidations {
+                if (entity.required ?? false) == true && (entity.isHidden == false) {
+                    let value = entity.value?.value
+                    if let valueStr = value as? String, valueStr == "" {
+                        return 12
+                    } else if let valueArray = value as? [String], valueArray.count == 0 {
+                        return 12
+                    }
+                } else {
+                    return 0
+                }
+            }
+        return 0
+    }
+    
 }
 
 

@@ -9,7 +9,6 @@ import UIKit
 import WebKit
 
 class MessageTableViewCell: UITableViewCell, WKUIDelegate, WKNavigationDelegate {
-    @IBOutlet weak var uriLbl: UILabel!
     @IBOutlet weak var webView: WKWebView!
     @IBOutlet weak var webViewHeight: NSLayoutConstraint!
     
@@ -38,7 +37,6 @@ class MessageTableViewCell: UITableViewCell, WKUIDelegate, WKNavigationDelegate 
         self.index = indexPath.row
         if let entity = dataa {
         //uriLbl.text = entity.uri
-          uriLbl.attributedText = dataa?.title?.htmlToAttributedString
 
             self.webView.scrollView.isScrollEnabled = false
             webView.loadHTMLString("<meta name='viewport' content='width=device-width, shrink-to-fit=YES'>" + entity.title!, baseURL: nil)
@@ -59,8 +57,6 @@ class MessageTableViewCell: UITableViewCell, WKUIDelegate, WKNavigationDelegate 
 //                self.tableView?.layoutIfNeeded()
 //            }
         })
-        
-        
     }
 
 
