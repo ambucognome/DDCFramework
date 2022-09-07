@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		920B5B0828C8B72600008600 /* AutocompleteTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 920B5B0428C8B72500008600 /* AutocompleteTableViewCell.xib */; };
+		920B5B0928C8B72600008600 /* ToggleSwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 920B5B0528C8B72500008600 /* ToggleSwitchTableViewCell.xib */; };
+		920B5B0A28C8B72600008600 /* ToggleSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B0628C8B72500008600 /* ToggleSwitchTableViewCell.swift */; };
+		920B5B0B28C8B72600008600 /* AutocompleteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B0728C8B72600008600 /* AutocompleteTableViewCell.swift */; };
+		920B5B1828C8B75100008600 /* DropDown.h in Headers */ = {isa = PBXBuildFile; fileRef = 920B5B0D28C8B75100008600 /* DropDown.h */; };
+		920B5B1928C8B75100008600 /* DropDownCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 920B5B0F28C8B75100008600 /* DropDownCell.xib */; };
+		920B5B1A28C8B75100008600 /* DPDKeyboardListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B1128C8B75100008600 /* DPDKeyboardListener.swift */; };
+		920B5B1B28C8B75100008600 /* DPDConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B1228C8B75100008600 /* DPDConstants.swift */; };
+		920B5B1C28C8B75100008600 /* DPDUIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B1328C8B75100008600 /* DPDUIView+Extension.swift */; };
+		920B5B1D28C8B75100008600 /* DropDownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B1528C8B75100008600 /* DropDownCell.swift */; };
+		920B5B1E28C8B75100008600 /* DropDown+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B1628C8B75100008600 /* DropDown+Appearance.swift */; };
+		920B5B1F28C8B75100008600 /* DropDownList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B1728C8B75100008600 /* DropDownList.swift */; };
+		920B5B2128C8B7EE00008600 /* ValidationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B5B2028C8B7EE00008600 /* ValidationHelper.swift */; };
 		A87A1FD3C2B31A2B7B0DF9DF /* Pods_DDCFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E8C16695DD5BB444B18982 /* Pods_DDCFramework.framework */; };
 		AAE8781A2888669700AFFE08 /* DDCFramework.docc in Sources */ = {isa = PBXBuildFile; fileRef = AAE878192888669700AFFE08 /* DDCFramework.docc */; };
 		AAE8781B2888669700AFFE08 /* DDCFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = AAE878182888669700AFFE08 /* DDCFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -69,6 +82,19 @@
 		3DF27BE03AF06ACA06A321EC /* Pods-DDCFramework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDCFramework.debug.xcconfig"; path = "Target Support Files/Pods-DDCFramework/Pods-DDCFramework.debug.xcconfig"; sourceTree = "<group>"; };
 		65E8C16695DD5BB444B18982 /* Pods_DDCFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DDCFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77DA95778B0FCDF31385B05B /* Pods-DDCFramework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDCFramework.release.xcconfig"; path = "Target Support Files/Pods-DDCFramework/Pods-DDCFramework.release.xcconfig"; sourceTree = "<group>"; };
+		920B5B0428C8B72500008600 /* AutocompleteTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AutocompleteTableViewCell.xib; path = ../../../../../DDC/ddc/Compan/AutocompleteTableViewCell.xib; sourceTree = "<group>"; };
+		920B5B0528C8B72500008600 /* ToggleSwitchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ToggleSwitchTableViewCell.xib; path = ../../../../../DDC/ddc/Compan/ToggleSwitchTableViewCell.xib; sourceTree = "<group>"; };
+		920B5B0628C8B72500008600 /* ToggleSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ToggleSwitchTableViewCell.swift; path = ../../../../../DDC/ddc/Compan/ToggleSwitchTableViewCell.swift; sourceTree = "<group>"; };
+		920B5B0728C8B72600008600 /* AutocompleteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutocompleteTableViewCell.swift; path = ../../../../../DDC/ddc/Compan/AutocompleteTableViewCell.swift; sourceTree = "<group>"; };
+		920B5B0D28C8B75100008600 /* DropDown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropDown.h; sourceTree = "<group>"; };
+		920B5B0F28C8B75100008600 /* DropDownCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DropDownCell.xib; sourceTree = "<group>"; };
+		920B5B1128C8B75100008600 /* DPDKeyboardListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DPDKeyboardListener.swift; sourceTree = "<group>"; };
+		920B5B1228C8B75100008600 /* DPDConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DPDConstants.swift; sourceTree = "<group>"; };
+		920B5B1328C8B75100008600 /* DPDUIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DPDUIView+Extension.swift"; sourceTree = "<group>"; };
+		920B5B1528C8B75100008600 /* DropDownCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDownCell.swift; sourceTree = "<group>"; };
+		920B5B1628C8B75100008600 /* DropDown+Appearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DropDown+Appearance.swift"; sourceTree = "<group>"; };
+		920B5B1728C8B75100008600 /* DropDownList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDownList.swift; sourceTree = "<group>"; };
+		920B5B2028C8B7EE00008600 /* ValidationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ValidationHelper.swift; path = ../../../../../../DDC/ddc/Compan/APIManager/ValidationHelper.swift; sourceTree = "<group>"; };
 		AAE878152888669700AFFE08 /* DDCFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DDCFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAE878182888669700AFFE08 /* DDCFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDCFramework.h; sourceTree = "<group>"; };
 		AAE878192888669700AFFE08 /* DDCFramework.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = DDCFramework.docc; sourceTree = "<group>"; };
@@ -147,6 +173,46 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		920B5B0C28C8B75100008600 /* DropDown */ = {
+			isa = PBXGroup;
+			children = (
+				920B5B0D28C8B75100008600 /* DropDown.h */,
+				920B5B0E28C8B75100008600 /* resources */,
+				920B5B1028C8B75100008600 /* helpers */,
+				920B5B1428C8B75100008600 /* src */,
+			);
+			name = DropDown;
+			path = ../../../../../DDC/ddc/Compan/DropDown;
+			sourceTree = "<group>";
+		};
+		920B5B0E28C8B75100008600 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				920B5B0F28C8B75100008600 /* DropDownCell.xib */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		920B5B1028C8B75100008600 /* helpers */ = {
+			isa = PBXGroup;
+			children = (
+				920B5B1128C8B75100008600 /* DPDKeyboardListener.swift */,
+				920B5B1228C8B75100008600 /* DPDConstants.swift */,
+				920B5B1328C8B75100008600 /* DPDUIView+Extension.swift */,
+			);
+			path = helpers;
+			sourceTree = "<group>";
+		};
+		920B5B1428C8B75100008600 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				920B5B1528C8B75100008600 /* DropDownCell.swift */,
+				920B5B1628C8B75100008600 /* DropDown+Appearance.swift */,
+				920B5B1728C8B75100008600 /* DropDownList.swift */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		AAE8780B2888669700AFFE08 = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +245,7 @@
 		AAE87821288866CD00AFFE08 /* Compan */ = {
 			isa = PBXGroup;
 			children = (
+				920B5B0C28C8B75100008600 /* DropDown */,
 				AAE87822288866CD00AFFE08 /* DatePickerTableViewCell.xib */,
 				AAE87823288866CD00AFFE08 /* ViewController.swift */,
 				AAE87824288866CD00AFFE08 /* TextfieldComponent.xib */,
@@ -207,6 +274,10 @@
 				AAE87853288866CE00AFFE08 /* CheckBoxTableViewCell.swift */,
 				AAE87854288866CE00AFFE08 /* MessageTableViewCell.swift */,
 				AAE87856288866CE00AFFE08 /* TimePickerTableViewCell.xib */,
+				920B5B0728C8B72600008600 /* AutocompleteTableViewCell.swift */,
+				920B5B0428C8B72500008600 /* AutocompleteTableViewCell.xib */,
+				920B5B0628C8B72500008600 /* ToggleSwitchTableViewCell.swift */,
+				920B5B0528C8B72500008600 /* ToggleSwitchTableViewCell.xib */,
 				AAE87857288866CE00AFFE08 /* SceneDelegate.swift */,
 				AAE87858288866CE00AFFE08 /* MessageTableViewCell.xib */,
 				AAE87859288866CE00AFFE08 /* SWRevealController */,
@@ -244,6 +315,7 @@
 		AAE8783B288866CD00AFFE08 /* APIManager */ = {
 			isa = PBXGroup;
 			children = (
+				920B5B2028C8B7EE00008600 /* ValidationHelper.swift */,
 				AAE8783C288866CE00AFFE08 /* ScriptHelper.swift */,
 				AAE8783D288866CE00AFFE08 /* ApiParameters.swift */,
 				AAE8783E288866CE00AFFE08 /* APIManager.swift */,
@@ -306,6 +378,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAE8781B2888669700AFFE08 /* DDCFramework.h in Headers */,
+				920B5B1828C8B75100008600 /* DropDown.h in Headers */,
 				AAE8788F288866CE00AFFE08 /* SWRevealViewController.h in Headers */,
 				AAE8788E288866CE00AFFE08 /* Compan-Bridging-Header.h in Headers */,
 			);
@@ -376,6 +449,8 @@
 				AAE87870288866CE00AFFE08 /* Main.storyboard in Resources */,
 				AAE87872288866CE00AFFE08 /* TextViewTableViewCell.xib in Resources */,
 				AAE8786C288866CE00AFFE08 /* RadioButtonTableViewCell.xib in Resources */,
+				920B5B0828C8B72600008600 /* AutocompleteTableViewCell.xib in Resources */,
+				920B5B1928C8B75100008600 /* DropDownCell.xib in Resources */,
 				AAE8785F288866CE00AFFE08 /* DatePickerTableViewCell.xib in Resources */,
 				AAE87884288866CE00AFFE08 /* FloatingLabelTextField.xib in Resources */,
 				AAE8788B288866CE00AFFE08 /* TimePickerTableViewCell.xib in Resources */,
@@ -384,6 +459,7 @@
 				AAE8786E288866CE00AFFE08 /* RepeatableTableViewCell.xib in Resources */,
 				AAE87861288866CE00AFFE08 /* TextfieldComponent.xib in Resources */,
 				AAE87863288866CE00AFFE08 /* CheckBoxTableViewCell.xib in Resources */,
+				920B5B0928C8B72600008600 /* ToggleSwitchTableViewCell.xib in Resources */,
 				AAE8787C288866CE00AFFE08 /* DropDownTableViewCell.xib in Resources */,
 				AAE8786A288866CE00AFFE08 /* Assets.xcassets in Resources */,
 			);
@@ -427,10 +503,13 @@
 				AAE87889288866CE00AFFE08 /* MessageTableViewCell.swift in Sources */,
 				AAE87888288866CE00AFFE08 /* CheckBoxTableViewCell.swift in Sources */,
 				AAE87871288866CE00AFFE08 /* LoadViewController.swift in Sources */,
+				920B5B1F28C8B75100008600 /* DropDownList.swift in Sources */,
 				AAE87866288866CE00AFFE08 /* Constants.swift in Sources */,
 				AAE8786D288866CE00AFFE08 /* RepeatableTableViewCell.swift in Sources */,
 				AAE87880288866CE00AFFE08 /* ERProgressHud.swift in Sources */,
+				920B5B2128C8B7EE00008600 /* ValidationHelper.swift in Sources */,
 				AAE87890288866CE00AFFE08 /* SWRevealViewController.m in Sources */,
+				920B5B1D28C8B75100008600 /* DropDownCell.swift in Sources */,
 				AAE87874288866CE00AFFE08 /* ApiParameters.swift in Sources */,
 				AAE87881288866CE00AFFE08 /* Utilities.swift in Sources */,
 				AAE87885288866CE00AFFE08 /* CustomTextField.swift in Sources */,
@@ -439,6 +518,7 @@
 				AAE87860288866CE00AFFE08 /* ViewController.swift in Sources */,
 				AAE87887288866CE00AFFE08 /* RadioButtonTableViewCell.swift in Sources */,
 				AAE8787D288866CE00AFFE08 /* AppDelegate.swift in Sources */,
+				920B5B1B28C8B75100008600 /* DPDConstants.swift in Sources */,
 				AAE8787A288866CE00AFFE08 /* FieldType.swift in Sources */,
 				AAE8787F288866CE00AFFE08 /* AuthenticationMethods.swift in Sources */,
 				AAE87867288866CE00AFFE08 /* SliderTableViewCell.swift in Sources */,
@@ -448,15 +528,20 @@
 				AAE87882288866CE00AFFE08 /* iOSDropDown.swift in Sources */,
 				AAE8788C288866CE00AFFE08 /* SceneDelegate.swift in Sources */,
 				AAE878942888682300AFFE08 /* DDCInitiate.swift in Sources */,
+				920B5B1A28C8B75100008600 /* DPDKeyboardListener.swift in Sources */,
 				AAE87886288866CE00AFFE08 /* Extention.swift in Sources */,
 				AAE87869288866CE00AFFE08 /* PickerTableViewCell.swift in Sources */,
 				AAE8787B288866CE00AFFE08 /* RequestHelper.swift in Sources */,
+				920B5B1E28C8B75100008600 /* DropDown+Appearance.swift in Sources */,
 				AAE8787E288866CE00AFFE08 /* DropDownTableViewCell.swift in Sources */,
+				920B5B1C28C8B75100008600 /* DPDUIView+Extension.swift in Sources */,
 				AAE87875288866CE00AFFE08 /* APIManager.swift in Sources */,
 				AAE87878288866CE00AFFE08 /* AnyCodable.swift in Sources */,
 				AAE87868288866CE00AFFE08 /* DatePickerTableViewCell.swift in Sources */,
 				AAE87892288866CE00AFFE08 /* TextfieldComponent.swift in Sources */,
+				920B5B0A28C8B72600008600 /* ToggleSwitchTableViewCell.swift in Sources */,
 				AAE8781A2888669700AFFE08 /* DDCFramework.docc in Sources */,
+				920B5B0B28C8B72600008600 /* AutocompleteTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

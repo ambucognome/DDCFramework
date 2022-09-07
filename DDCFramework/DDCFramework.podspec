@@ -3,7 +3,7 @@ Pod::Spec.new do |spec|
 
 
   spec.name         = "DDCFramework"
-  spec.version      = "1.0.2"
+  spec.version      = "1.0.3"
     spec.requires_arc = true
   spec.summary      = "This is form framework"
   spec.description  = "Framework for form module"
@@ -35,7 +35,8 @@ Pod::Spec.new do |spec|
     spec.dependency "SelectionList"
     spec.dependency "DatePickerDialog"
     
-    spec.swift_version = "5.5.1"
+    spec.swift_version = "5.6"
+
 
 end
 

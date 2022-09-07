@@ -10,6 +10,8 @@ import SwiftUI
 
 //Model declared globally
 public var ddcModel : DDCFormModel?
+public var survey_data = NSDictionary()
+public var context_parameters = [String:Any]()
 
 //Temporary place for setting reset value
 public var isResetAvailable = false // Show/hide reset button
@@ -23,6 +25,7 @@ public var headerFont = UIFont.systemFont(ofSize: 16, weight: .medium)
 public var username = ""
 
 var templateURI = ""
+
 
 public protocol DynamicTemplateViewControllerDelegate {
     func didSubmitSurvey(params:[String:Any])

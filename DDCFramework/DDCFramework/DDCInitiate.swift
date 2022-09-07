@@ -28,9 +28,9 @@ public struct DDCInitiate {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:frameworkBundle)
         let vc = storyBoard.instantiateViewController(withIdentifier: "ViewController") as! ViewController
 
-        vc.uri = uri
-        vc.author = author
-        vc.context = context
+//        vc.uri = uri
+//        vc.author = author
+//        vc.context = context
 //        let navVc = UINavigationController(rootViewController: vc)
         UIApplication.topViewController()?.navigationController?.pushViewController(vc, animated: true)
 //        viewController.presentViewController(nextViewController, animated:true, completion:nil)
