@@ -8,6 +8,9 @@
 import Foundation
 import JavaScriptCore
 
+var entities = [String:Any]()
+
+
 class RequestHelper : NSObject {
     
     static let shared = RequestHelper()
@@ -23,7 +26,7 @@ class RequestHelper : NSObject {
     }
     
     
-    func updateValueAPI(parameter: [String:Any], isCalculativeEntity: Bool) {
+    func updateValueAPI(parameter: [String:Any], isCalculativeEntity: Bool,isAPIReloadRequired: Bool) {
         let jsonData = try! JSONSerialization.data(withJSONObject: parameter, options: JSONSerialization.WritingOptions.prettyPrinted)
         let jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
         print(jsonString)
@@ -35,6 +38,11 @@ class RequestHelper : NSObject {
                 if statusCode != 200 {
                     APIManager.sharedInstance.showAlertWithMessage(message: ERROR_MESSAGE_DEFAULT)
                 }
+                if isAPIReloadRequired == false && isCalculativeEntity == false {
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
+                    ScriptHelper.shared.checkIsVisibleEntity()
+                    return
+                }
                 if isCalculativeEntity == false {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadAPI"), object: nil)
                 }
@@ -45,27 +53,50 @@ class RequestHelper : NSObject {
         }
     }
     
-    
-    func updateValue(entity:Entity, newValue: Any, path: String, isCalculativeEntity: Bool) {
-        let name = username
+    func updateValue(entity:Entity, newValue: Any, path: String, isCalculativeEntity: Bool, isAPIReloadRequired:Bool = true) {
+        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
+        var entityParam =  [String:Any]()
+        if isCalculativeEntity {
+            print(calculativeCount)
+            entities[path] =  [
+                "type": entity.type?.rawValue ?? "",
+                "title": entity.title ?? "",
+                "active": entity.active ?? false,
+                "order": entity.order ?? "",
+                "guiControlType": entity.guiControlType ?? "",
+                "id": entity.id ?? "",
+                "value": newValue,
+                "oldValue": entity.value?.value,
+                "lastUpdatedBy": name,
+                "lastUpdatedDate": Int64(Date().timeIntervalSince1970) ]
+                
+            let entityCount = entities.keys.count
+            if calculativeCount == entityCount {
+                entityParam = entities
+            } else {
+                return
+            }
+        } else {
+            entityParam =  [
+               path : [
+               "type": entity.type?.rawValue ?? "",
+               "title": entity.title ?? "",
+               "active": entity.active ?? false,
+               "order": entity.order ?? "",
+               "guiControlType": entity.guiControlType ?? "",
+               "id": entity.id ?? "",
+               "value": newValue,
+               "oldValue": entity.value?.value,
+               "lastUpdatedBy": name,
+               "lastUpdatedDate": Int64(Date().timeIntervalSince1970) ]
+               ]
+        }
         let parameters = [
             "template_instance_id": ddcModel?.template?.instanceID ?? "" ,
-            "entities": [
-                path : [
-                    "type": entity.type?.rawValue ?? "",
-                    "title": entity.title ?? "",
-                    "active": entity.active ?? false,
-                    "order": entity.order ?? "",
-                    "guiControlType": entity.guiControlType ?? "",
-                    "id": entity.id ?? "",
-                    "value": newValue,
-                    "oldValue": entity.value?.value,
-                    "lastUpdatedBy": name,
-                    "lastUpdatedDate": Int64(Date().timeIntervalSince1970) ]
-            ],
+            "entities": entityParam,
             "modified_by": name
         ] as [String : Any]
-        self.updateValueAPI(parameter: parameters,isCalculativeEntity : isCalculativeEntity)
+        self.updateValueAPI(parameter: parameters,isCalculativeEntity : isCalculativeEntity, isAPIReloadRequired: isAPIReloadRequired)
     }
     
     
@@ -105,11 +136,19 @@ class RequestHelper : NSObject {
                     if entity.onValue != nil && entity.onValue != "" {
                         //run script
                         self.executeScript(currentValue: newValue, previousValue: entity.value?.value as Any, scriptString: entity.onValue!) { value in
-                            self.updateValue(entity: entityData, newValue: value, path: self.url,isCalculativeEntity: isCalculativeEntity)
+                            ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringArrayLiteral: value)
+                            self.updateValue(entity: entityData, newValue: value, path: self.url,isCalculativeEntity: isCalculativeEntity, isAPIReloadRequired: false)
                             return
                         }
                     } else {
-                        self.updateValue(entity: entityData, newValue: newValue, path: url,isCalculativeEntity: isCalculativeEntity)
+                        if let newValueString = newValue as? String {
+                            ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringLiteral: newValueString)
+                        }  else if let newValueStringArray = newValue as? Bool {
+                            ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(booleanLiteral:  newValueStringArray)
+                        } else if let newValueStringArray = newValue as? [String: Any]  {
+                            ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringDictionaryLiteral: newValueStringArray)
+                        }
+                        self.updateValue(entity: entityData, newValue: newValue, path: url,isCalculativeEntity: isCalculativeEntity, isAPIReloadRequired: false)
                         return
                     }
                 }
@@ -379,7 +418,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     
     
     func addRepeatableEntityGroup(object: [String : Any],path: String ) {
-        let name = username
+        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
         let parameters : [String : Any] = [
           "entity_group_object": object,
           "entity_group_path": path,
@@ -407,7 +446,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     }
     
     func deleteRepeatableEntityGroup(object: [String : Any],path: String ) {
-        let name = username
+        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
         let parameters : [String : Any] = [
         
           "entity_group_object": object,
@@ -479,7 +518,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
         context.evaluateScript(script)
 
         let result: JSValue = context.evaluateScript("ddcscript(\(currentValueString),\(previousValueString));")
-        print("onValue jsScript Result ---- ",result)        
+        print("onValue jsScript Result ---- ",result)
         let value = result.toArray() as? [String] ?? []
         completion(value)
     }

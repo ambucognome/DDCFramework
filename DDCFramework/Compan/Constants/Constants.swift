@@ -25,6 +25,7 @@ public let API_END_DELETE_REPEATABLE_ENTITY_GROUP = "deleteRepeatableEntityGroup
 public let API_END_EXCUTE_DDC_SCRIPT = "executeDDCScript"
 public let API_END_SAVE_TEMPLATE_INSTANCE = "saveTemplateInstance"
 public let API_END_RESET_TEMPLATE_INSTANCE = "resetTemplateInstance"
+public let API_END_REVOKE_BASE_ENTITY = "revokeBaseEntity"
 
 
 

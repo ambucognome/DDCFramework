@@ -29,6 +29,8 @@ public class APIManager : NSObject {
         case excuteDDCScript(Data)
         case saveTemplate(Data)
         case resetTemplate(Data)
+        case revokeBaseEntity(Data)
+
 
         // Api Methods
         var method: HTTPMethod {
@@ -49,6 +51,9 @@ public class APIManager : NSObject {
                 return .post
             case .resetTemplate:
                 return .delete
+            case .revokeBaseEntity:
+                return .delete
+
             }
         }
             
@@ -71,6 +76,9 @@ public class APIManager : NSObject {
                 return API_END_SAVE_TEMPLATE_INSTANCE
             case .resetTemplate:
                 return API_END_RESET_TEMPLATE_INSTANCE
+            case .revokeBaseEntity:
+                return API_END_REVOKE_BASE_ENTITY
+
             }
         }
         
@@ -109,6 +117,10 @@ public class APIManager : NSObject {
             case .resetTemplate(let data):
                 urlRequest.httpBody = data
                 return urlRequest
+            case .revokeBaseEntity(let data):
+                urlRequest.httpBody = data
+                return urlRequest
+
             }
         }
     }
@@ -328,6 +340,30 @@ public class APIManager : NSObject {
     // Returns
     public func makeRequestToResetTemplateInstance(data:Data,completion: @escaping completionHandlerWithStatusCode) {
         Alamofire.request(Router.resetTemplate(data)).responseJSON { response in
+            switch response.result {
+            case .success(let JSON):
+                ERProgressHud.shared.hide()
+                let statusCode = response.response?.statusCode
+                guard let jsonData =  JSON  as? NSDictionary else {
+                    APIManager.sharedInstance.showAlertWithMessage(message: ERROR_MESSAGE_DEFAULT)
+                    return
+                }
+                if statusCode == SUCCESS_CODE_200{
+                    completion(true, jsonData, statusCode!)
+                } else {
+                    APIManager.sharedInstance.showAlertWithMessage(message: self.choooseMessageForErrorCode(errorCode: statusCode!))
+                }
+            case .failure( _):
+                completion(true,[:],0)
+            }
+        }
+    }
+    
+    // revoke base entity
+    // completion : Completion object to return parameters to the calling functions
+    // Returns
+    func makeRequestToRevokeBaseEntity(data:Data,completion: @escaping completionHandlerWithStatusCode) {
+        Alamofire.request(Router.revokeBaseEntity(data)).responseJSON { response in
             switch response.result {
             case .success(let JSON):
                 ERProgressHud.shared.hide()
