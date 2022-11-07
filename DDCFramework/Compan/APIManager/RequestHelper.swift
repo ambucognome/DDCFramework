@@ -17,7 +17,6 @@ class RequestHelper : NSObject {
 
     var pathCreation = ""
     var url = ""
-    var ex = ""
     let context = JSContext()!
 
     
