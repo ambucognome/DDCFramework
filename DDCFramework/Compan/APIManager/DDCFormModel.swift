@@ -116,6 +116,8 @@ class Entity: Codable {
     var errorMessage : String?
     var onValue : String?
     var attributedTitleHeight : CGFloat = 0
+    var invokation : Bool = false
+
     
     enum CodingKeys: String, CodingKey {
     

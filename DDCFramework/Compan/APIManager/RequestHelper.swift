@@ -54,7 +54,7 @@ class RequestHelper : NSObject {
     }
     
     func updateValue(entity:Entity, newValue: Any, path: String, isCalculativeEntity: Bool, isAPIReloadRequired:Bool = true) {
-        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
+        let name = username
         var entityParam =  [String:Any]()
         if isCalculativeEntity {
             print(calculativeCount)
