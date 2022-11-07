@@ -418,7 +418,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     
     
     func addRepeatableEntityGroup(object: [String : Any],path: String ) {
-        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
+        let name = username
         let parameters : [String : Any] = [
           "entity_group_object": object,
           "entity_group_path": path,
@@ -446,7 +446,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     }
     
     func deleteRepeatableEntityGroup(object: [String : Any],path: String ) {
-        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
+        let name = username
         let parameters : [String : Any] = [
         
           "entity_group_object": object,
