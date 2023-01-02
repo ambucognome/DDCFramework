@@ -16,7 +16,7 @@ import UIKit
 //let BASEURL = "https://mt-vernon-safecheck-dev-ddcbackend.azurewebsites.net/"
 
 //Dev
-let BASEURL = "http://192.168.199.83:8085/"
+public var BASEURL = "http://192.168.199.83:8085/"
 
 public let API_END_GET_TEMPLATE = "getTemplate"
 public let API_END_UPDATE_ENTITY_VALUE = "updateTemplateEntity"
@@ -102,7 +102,7 @@ public let TEMP_TOKEN_KEY = "Authorization"
 //public let TEMP_TOKEN_VALUE = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoiY292aWRfc2FmZWNoZWNrX2Nsb3VkIiwiaWQiOiI2MzE3YjBhMDQzMjQzMjIyYjg5ZjM3NjkiLCJpYXQiOjE2NjI0OTY5Mjd9.m-pWJJ01q8nYz30JKbdKiR_bUg7B4iZXDzscLsX43hM"
 
 // Dev
-let TEMP_TOKEN_VALUE = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoiY292aWRfc2FmZWNoZWNrX2Nsb3VkIiwiaWQiOiI2MmVjMzE4YTFlNjZmMTQyZjg0N2VhMDkiLCJpYXQiOjE2NTk2NDYzNDZ9.Jyu7J6G0TlCo_i_7KAZAhpJDALA-yHYG-0kp_WaJoWA"
+public var TEMP_TOKEN_VALUE = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoiY292aWRfc2FmZWNoZWNrX2Nsb3VkIiwiaWQiOiI2MmVjMzE4YTFlNjZmMTQyZjg0N2VhMDkiLCJpYXQiOjE2NTk2NDYzNDZ9.Jyu7J6G0TlCo_i_7KAZAhpJDALA-yHYG-0kp_WaJoWA"
 
 
 // MARK: Error Codes And Strings

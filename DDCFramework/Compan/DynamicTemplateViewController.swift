@@ -257,7 +257,7 @@ public class DynamicTemplateViewController: UIViewController,UITableViewDelegate
             if section == 0 {
             titleLabel.text =  ddcModel?.template?.title
             }
-        }
+        } 
         if ddcModel?.template?.sortedArray?[section].value.type == .entityGroupRepeatable || ddcModel?.template?.sortedArray?[section].value.type == .entityGroup {
 
             let button = UIButton()
