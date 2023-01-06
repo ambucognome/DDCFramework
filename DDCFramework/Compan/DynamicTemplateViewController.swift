@@ -13,34 +13,38 @@ import NotificationBannerSwift
 //var ddcModel : DDCFormModel?
 
 //Temporary place for setting reset value
-var isResetAvailable = false // Show/hide reset button
-var showValidations = false // validate before submit
-var isReadOnly = false // read only
-var showHeader = true // show/hide header
-var savePerField = true // save per field
-var headerBackgroundColor = UIColor(red: 0, green: 0.7255, blue: 0.9686, alpha: 1)
-var headerFontColor = UIColor.white
-var headerFont = UIFont.systemFont(ofSize: 16, weight: .medium)
-var username = ""
+//Temporary place for setting reset value
+public var isResetAvailable = false // Show/hide reset button
+public var showValidations = false // validate before submit
+public var isReadOnly = false // read only
+public var showHeader = true // show/hide header
+public var savePerField = true // save per field
+public var headerBackgroundColor = UIColor(red: 0, green: 0.7255, blue: 0.9686, alpha: 1)
+public var headerFontColor = UIColor.white
+public var headerFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+public var username = ""
 
-var templateURI = ""
-var surveyID = ""
+public var templateURI = ""
+public var surveyID = ""
+
+public var context_parameters = [String:Any]()
+public var survey_data = NSDictionary()
 
 protocol DynamicTemplateViewControllerDelegate {
     func didSubmitSurvey(params:[String:Any])
 }
 
-class DynamicTemplateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+public class DynamicTemplateViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerLabel: UILabel!
     
     
-    var delegate: DynamicTemplateViewControllerDelegate?
-    
+    public var delegate: DynamicTemplateViewControllerDelegate?
+
     // declare dictionary variable for storing heights of cells
-    var cellHeightsDictionary: [IndexPath: CGFloat] = [:]
-    
+    public var cellHeightsDictionary: [IndexPath: CGFloat] = [:]
+
     var dataModel: DDCFormModel?
 
     override func viewDidLoad() {
@@ -112,15 +116,15 @@ class DynamicTemplateViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     @IBAction func submitBtn(_ sender: Any) {
-        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
-        let parameter = ["blueprint": try! dataModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": name] as [String : Any]
+        let name = username
+        let parameter = ["blueprint": try! ddcModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": name] as [String : Any]
         self.saveTemplateInstance(template: parameter)
     }
     
     @IBAction func resetBtn(_ sender: Any) {
         showValidations = false
-        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
-        let parameter = ["blueprint": try! dataModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": name] as [String : Any]
+        let name = username
+        let parameter = ["blueprint": try! ddcModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": name] as [String : Any]
         self.resetTemplateInstance(template: parameter)
     }
     
@@ -137,7 +141,7 @@ class DynamicTemplateViewController: UIViewController, UITableViewDelegate, UITa
         }
         showValidations = false
             var symptomKeys = [String]()
-            let dropDownSet = dataModel?.valueSet?["symptomSet"]
+        let dropDownSet = dataModel?.valueSet?["symptomSet"]
             for i in 0..<(dropDownSet?.count ?? 0) {
                 let item = dropDownSet![i]
                 symptomKeys.append(item.keys.first!)
@@ -215,7 +219,7 @@ class DynamicTemplateViewController: UIViewController, UITableViewDelegate, UITa
 
 
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+   public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.panGestureRecognizer.translation(in: scrollView).y < 0 {
             NotificationCenter.default.post(name: Notification.Name("ReelSectionID"), object: nil,userInfo: ["hide" : true])
         } else {
@@ -224,19 +228,19 @@ class DynamicTemplateViewController: UIViewController, UITableViewDelegate, UITa
     }
 
 // MARK: - UITableViewDataSource
-func numberOfSections(in tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
 //    return (ddcModel?.template?.entities?.count)!
     return (dataModel?.template?.sortedArray?.count)!
 }
 
-func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if dataModel?.template?.sortedArray?[section].value.type == .entityGroupRepeatable || dataModel?.template?.sortedArray?[section].value.type == .entityGroup {
         return dataModel?.template?.sortedArray?[section].value.sortedEntityGroupsArray?.count ?? 0
     }
     return 1
 }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if showHeader == false {
             return nil
         }
@@ -301,7 +305,7 @@ func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> 
 //        self.tableView.reloadData()
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if showHeader == false {
             return 0
         }
@@ -317,7 +321,7 @@ func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> 
     }
 
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var data : Entity?
         if dataModel?.template?.sortedArray![indexPath.section].value.type == .entityGroupRepeatable {
 //            data = ddcModel?.template?.entities![indexPath.section].entityGroups![0].entities![indexPath.row]
@@ -382,7 +386,7 @@ func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> 
         return 100
 }
     
-func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 let cellIdentifier = "DefaultCell"
 
@@ -543,13 +547,13 @@ if cell == nil {
 }
 
 // MARK: - UITableViewDelegate
-func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 }
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    public  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
             self.cellHeightsDictionary[indexPath] = cell.frame.size.height
         }
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
             if let height =  self.cellHeightsDictionary[indexPath]{
                 return height
             }
