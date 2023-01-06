@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import DatePickerDialog
 
 class DatePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet weak var textField: UITextField!
@@ -14,6 +13,8 @@ class DatePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet weak var resetBtn: UIButton!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var errorLabelHeight: NSLayoutConstraint!
+
+    var ddcModel: DDCFormModel?
 
     
     let datePicker = DatePickerDialog()
@@ -89,7 +90,7 @@ class DatePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
                 formatter.dateFormat = "dd/MM/YYYY"
                 self.textField.text = formatter.string(from: dt)
 //                RequestHelper.shared.createRequestForEntity(data: self.data!, index: self.indexPath!, newValue: self.textField.text!)
-                RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: self.textField.text!, entityGroupId: self.entityGroupId,parentEntityGroupId: self.parentEntityGroupId,groupOrder: self.groupOrder)
+                RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: self.textField.text!, entityGroupId: self.entityGroupId,parentEntityGroupId: self.parentEntityGroupId,groupOrder: self.groupOrder, dataModel: self.ddcModel)
 
                 
             }
@@ -106,7 +107,7 @@ class DatePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
     }
     
     @IBAction func resetBtn(_ sender: Any) {
-        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: "", entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder)
+        RequestHelper.shared.createRequestForEntity(entity: self.entity!, newValue: "", entityGroupId: entityGroupId,parentEntityGroupId: parentEntityGroupId,groupOrder: groupOrder, dataModel: self.ddcModel)
     }
 }
 

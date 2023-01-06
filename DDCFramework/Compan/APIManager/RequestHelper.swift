@@ -18,9 +18,11 @@ class RequestHelper : NSObject {
     var pathCreation = ""
     var url = ""
     let context = JSContext()!
+    var ddcModel: DDCFormModel?
 
     
-    func createRequestForEntity(entity:Entity, newValue: Any, entityGroupId: String,parentEntityGroupId:String,isCalculativeEntity: Bool = false,groupOrder:Int){
+    func createRequestForEntity(entity:Entity, newValue: Any, entityGroupId: String,parentEntityGroupId:String,isCalculativeEntity: Bool = false,groupOrder:Int,dataModel: DDCFormModel?){
+        self.ddcModel = dataModel
         self.getRepeatableEntityAddress(entityData: entity, newValue: newValue, entityGroupId: entityGroupId,parentEntityGroupId:parentEntityGroupId,isCalculativeEntity: isCalculativeEntity,groupOrder: groupOrder)
         
     }
@@ -40,7 +42,7 @@ class RequestHelper : NSObject {
                 }
                 if isAPIReloadRequired == false && isCalculativeEntity == false {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadTable"), object: nil)
-                    ScriptHelper.shared.checkIsVisibleEntity()
+                    ScriptHelper.shared.checkIsVisibleEntity(ddcModel: self.ddcModel)
                     return
                 }
                 if isCalculativeEntity == false {
@@ -54,7 +56,7 @@ class RequestHelper : NSObject {
     }
     
     func updateValue(entity:Entity, newValue: Any, path: String, isCalculativeEntity: Bool, isAPIReloadRequired:Bool = true) {
-        let name = username
+        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
         var entityParam =  [String:Any]()
         if isCalculativeEntity {
             print(calculativeCount)
@@ -120,7 +122,7 @@ class RequestHelper : NSObject {
                         } else if let newValueStringArray = newValue as? [String] {
                             if entity.onValue != nil && entity.onValue != "" {
                                 self.executeScript(currentValue: newValue, previousValue: entity.value?.value as Any, scriptString: entity.onValue!) { value in
-                                    ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringArrayLiteral: value)
+                                    self.ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringArrayLiteral: value)
                                 }
                             } else {
                                 ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringArrayLiteral: newValueStringArray)
@@ -136,7 +138,7 @@ class RequestHelper : NSObject {
                     if entity.onValue != nil && entity.onValue != "" {
                         //run script
                         self.executeScript(currentValue: newValue, previousValue: entity.value?.value as Any, scriptString: entity.onValue!) { value in
-                            ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringArrayLiteral: value)
+                            self.ddcModel?.template?.sortedArray?[entityIndex].value.value = AnyCodable.init(stringArrayLiteral: value)
                             self.updateValue(entity: entityData, newValue: value, path: self.url,isCalculativeEntity: isCalculativeEntity, isAPIReloadRequired: false)
                             return
                         }
@@ -418,7 +420,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     
     
     func addRepeatableEntityGroup(object: [String : Any],path: String ) {
-        let name = username
+        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
         let parameters : [String : Any] = [
           "entity_group_object": object,
           "entity_group_path": path,
@@ -446,7 +448,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     }
     
     func deleteRepeatableEntityGroup(object: [String : Any],path: String ) {
-        let name = username
+        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
         let parameters : [String : Any] = [
         
           "entity_group_object": object,
@@ -500,7 +502,6 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     }
     
     func executeScript(currentValue: Any, previousValue: Any, scriptString:String, completion: @escaping  ([String]) -> ()) {
-//        onValue = "const filteredValue = currentValue.filter(symp => !previousValue.includes(symp));if (filteredValue.includes(\"symptoms__0\")) return [\"symptoms_0\"]; else return currentValue.filter(key => key !== \"symptoms__0\");";
 
         let currentValueString = self.json(from: (currentValue as? [String] ?? [])) ?? ""//.convertToString
         let previousValueString = self.json(from: (previousValue as? [String] ?? [])) ?? ""
@@ -518,7 +519,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
         context.evaluateScript(script)
 
         let result: JSValue = context.evaluateScript("ddcscript(\(currentValueString),\(previousValueString));")
-        print("onValue jsScript Result ---- ",result)
+        print("onValue jsScript Result ---- ",result)        
         let value = result.toArray() as? [String] ?? []
         completion(value)
     }
