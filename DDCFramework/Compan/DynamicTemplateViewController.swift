@@ -30,7 +30,7 @@ public var surveyID = ""
 public var context_parameters = [String:Any]()
 public var survey_data = NSDictionary()
 
-protocol DynamicTemplateViewControllerDelegate {
+public protocol DynamicTemplateViewControllerDelegate {
     func didSubmitSurvey(params:[String:Any])
 }
 
@@ -47,7 +47,7 @@ public class DynamicTemplateViewController: UIViewController,UITableViewDelegate
 
     var dataModel: DDCFormModel?
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         self.headerLabel.text = "Welcome \(username)"
         self.navigationController?.isNavigationBarHidden = true
@@ -117,14 +117,14 @@ public class DynamicTemplateViewController: UIViewController,UITableViewDelegate
     
     @IBAction func submitBtn(_ sender: Any) {
         let name = username
-        let parameter = ["blueprint": try! ddcModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": name] as [String : Any]
+        let parameter = ["blueprint": try! dataModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": name] as [String : Any]
         self.saveTemplateInstance(template: parameter)
     }
     
     @IBAction func resetBtn(_ sender: Any) {
         showValidations = false
         let name = username
-        let parameter = ["blueprint": try! ddcModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": name] as [String : Any]
+        let parameter = ["blueprint": try! dataModel!.toDictionary(), "context_parameters": context_parameters, "modified_by": name] as [String : Any]
         self.resetTemplateInstance(template: parameter)
     }
     

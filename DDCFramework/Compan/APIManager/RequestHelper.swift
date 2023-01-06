@@ -56,7 +56,7 @@ class RequestHelper : NSObject {
     }
     
     func updateValue(entity:Entity, newValue: Any, path: String, isCalculativeEntity: Bool, isAPIReloadRequired:Bool = true) {
-        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
+        let name = username
         var entityParam =  [String:Any]()
         if isCalculativeEntity {
             print(calculativeCount)
@@ -420,7 +420,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     
     
     func addRepeatableEntityGroup(object: [String : Any],path: String ) {
-        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
+        let name = username
         let parameters : [String : Any] = [
           "entity_group_object": object,
           "entity_group_path": path,
@@ -448,7 +448,7 @@ func repeatEntityGroupCheck(entityGroupToRepeat: EntityRepeatableGroup, entities
     }
     
     func deleteRepeatableEntityGroup(object: [String : Any],path: String ) {
-        let name = "\(SafeCheckUtils.getUserData()?.user?.firstname ?? "") \(SafeCheckUtils.getUserData()?.user?.lastname ?? "")"
+        let name = username
         let parameters : [String : Any] = [
         
           "entity_group_object": object,
