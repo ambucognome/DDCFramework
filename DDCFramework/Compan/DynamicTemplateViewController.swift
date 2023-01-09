@@ -45,7 +45,7 @@ public class DynamicTemplateViewController: UIViewController,UITableViewDelegate
     // declare dictionary variable for storing heights of cells
     public var cellHeightsDictionary: [IndexPath: CGFloat] = [:]
 
-    var dataModel: DDCFormModel?
+    public var dataModel: DDCFormModel?
 
     public override func viewDidLoad() {
         super.viewDidLoad()

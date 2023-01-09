@@ -10,16 +10,16 @@ import JavaScriptCore
 
 var calculativeCount = 0
 
-class ScriptHelper : NSObject {
+public class ScriptHelper : NSObject {
     
-    static let shared = ScriptHelper()
+    public static let shared = ScriptHelper()
     
-    var pathCreation = ""
-    var url = ""
+    public var pathCreation = ""
+    public var url = ""
 
-    let context = JSContext()!
+    public let context = JSContext()!
     
-    func checkIsVisibleEntity(ddcModel : DDCFormModel?) {
+    public func checkIsVisibleEntity(ddcModel : DDCFormModel?) {
         self.getCalculativeCount(ddcModel: ddcModel)
         url = "template"
         let mainEntities = ddcModel?.template?.sortedArray
@@ -130,7 +130,7 @@ class ScriptHelper : NSObject {
     }
     
     
-    func getCalculativeCount(ddcModel: DDCFormModel?) {
+    public func getCalculativeCount(ddcModel: DDCFormModel?) {
         entities = [:]
         calculativeCount = 0
         let mainEntities = ddcModel?.template?.sortedArray
@@ -173,7 +173,7 @@ class ScriptHelper : NSObject {
         }
     }
 
-    func revokeEntity(entityObj:String, path:String,ddcModel: DDCFormModel?) {
+    public func revokeEntity(entityObj:String, path:String,ddcModel: DDCFormModel?) {
         var entityDic  = [String:Any]()
         if let data = entityObj.data(using: .utf8) {
             let dic = try! JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.fragmentsAllowed) as! [String: Any]
@@ -202,7 +202,7 @@ class ScriptHelper : NSObject {
         }
     }
     
-    func executeScrip(parentObj:String,scriptString: String,ddcModel: DDCFormModel?, completion: @escaping  (Bool, Bool) -> ()) {
+    public func executeScrip(parentObj:String,scriptString: String,ddcModel: DDCFormModel?, completion: @escaping  (Bool, Bool) -> ()) {
         let template = ddcModel?.template?.convertToString ?? ""
         
 //        let jsCode = "return this.entities.symptoms.value.includes(\"symptoms___1\") ; "
@@ -251,7 +251,7 @@ class ScriptHelper : NSObject {
     }
     
     
-    func executeCalculativeScrip(parentObj:String,scriptString: String,ddcModel: DDCFormModel?, completion: @escaping  (String) -> ()) {
+    public func executeCalculativeScrip(parentObj:String,scriptString: String,ddcModel: DDCFormModel?, completion: @escaping  (String) -> ()) {
         let template = ddcModel?.template?.convertToString ?? ""
         
 //        let jsCode = "return this.entities.symptoms.value.includes(\"symptoms___1\") ; "
