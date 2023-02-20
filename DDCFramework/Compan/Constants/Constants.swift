@@ -92,6 +92,9 @@ public let WHITE_THREE = UIColor(white: 239.0 / 255.0, alpha: 1.0)
 public let BROWNISH_ORANGE = UIColor(red: 218.0 / 255.0, green: 144.0 / 255.0, blue: 24.0 / 255.0, alpha: 0.6)
 public let FADED_BLUE = UIColor(red: 97.0 / 255.0, green: 144.0 / 255.0, blue: 185.0 / 255.0, alpha: 1.0)
 
+let DARK_BLUE_COLOR = UIColor(red: 0.07, green: 0.22, blue: 0.40, alpha: 1.00)
+
+
 //Temperory Hardcoded token
 let TEMP_TOKEN_KEY = "Authorization"
 

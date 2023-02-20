@@ -19,13 +19,14 @@ public var showValidations = false // validate before submit
 public var isReadOnly = false // read only
 public var showHeader = true // show/hide header
 public var savePerField = true // save per field
-var headerBackgroundColor = DARK_BLUE_COLOR//UIColor(red: 0, green: 0.7255, blue: 0.9686, alpha: 1)
+public var headerBackgroundColor = DARK_BLUE_COLOR//UIColor(red: 0, green: 0.7255, blue: 0.9686, alpha: 1)
 public var headerFontColor = UIColor.white
 public var headerFont = UIFont.systemFont(ofSize: 16, weight: .medium)
 public var username = ""
 
 public var templateURI = ""
 public var surveyID = ""
+
 
 public var context_parameters = [String:Any]()
 public var survey_data = NSDictionary()
