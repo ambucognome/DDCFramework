@@ -19,7 +19,7 @@ public var showValidations = false // validate before submit
 public var isReadOnly = false // read only
 public var showHeader = true // show/hide header
 public var savePerField = true // save per field
-public var headerBackgroundColor = UIColor(red: 0, green: 0.7255, blue: 0.9686, alpha: 1)
+var headerBackgroundColor = DARK_BLUE_COLOR//UIColor(red: 0, green: 0.7255, blue: 0.9686, alpha: 1)
 public var headerFontColor = UIColor.white
 public var headerFont = UIFont.systemFont(ofSize: 16, weight: .medium)
 public var username = ""
@@ -38,6 +38,8 @@ public class DynamicTemplateViewController: UIViewController,UITableViewDelegate
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var resetBtn: UIButton!
+
     
     
     public var delegate: DynamicTemplateViewControllerDelegate?
@@ -55,6 +57,10 @@ public class DynamicTemplateViewController: UIViewController,UITableViewDelegate
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: "DefaultCell")
         tableView.dataSource = self
+        
+        self.resetBtn.layer.borderColor = DARK_BLUE_COLOR.cgColor
+        self.resetBtn.layer.borderWidth = 1
+
         
         //Register cell for using in tableview
         let frameworkBundle = Bundle(for: DynamicTemplateViewController.self)
