@@ -12,11 +12,8 @@ import UIKit
 //Base Url
 //DDC Base URL
 
-// UAT
-//let BASEURL = "https://mt-vernon-safecheck-dev-ddcbackend.azurewebsites.net/"
 
-//Dev
-public var BASEURL = "http://192.168.199.83:8085/"
+public var BASEURL = "https://ddcbackend.azurewebsites.net/"
 
 public let API_END_GET_TEMPLATE = "getTemplate"
 public let API_END_UPDATE_ENTITY_VALUE = "updateTemplateEntity"
@@ -96,13 +93,12 @@ public let BROWNISH_ORANGE = UIColor(red: 218.0 / 255.0, green: 144.0 / 255.0, b
 public let FADED_BLUE = UIColor(red: 97.0 / 255.0, green: 144.0 / 255.0, blue: 185.0 / 255.0, alpha: 1.0)
 
 //Temperory Hardcoded token
-public let TEMP_TOKEN_KEY = "Authorization"
+let TEMP_TOKEN_KEY = "Authorization"
 
 // UAT
-//public let TEMP_TOKEN_VALUE = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoiY292aWRfc2FmZWNoZWNrX2Nsb3VkIiwiaWQiOiI2MzE3YjBhMDQzMjQzMjIyYjg5ZjM3NjkiLCJpYXQiOjE2NjI0OTY5Mjd9.m-pWJJ01q8nYz30JKbdKiR_bUg7B4iZXDzscLsX43hM"
+let TEMP_TOKEN_VALUE = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoiY292aWRfc2FmZWNoZWNrX2Nsb3VkIiwiaWQiOiI2MmVjMzE4YTFlNjZmMTQyZjg0N2VhMDkiLCJpYXQiOjE2NTk2NDYzNDZ9.Jyu7J6G0TlCo_i_7KAZAhpJDALA-yHYG-0kp_WaJoWA"
 
-// Dev
-public var TEMP_TOKEN_VALUE = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhcHBOYW1lIjoiY292aWRfc2FmZWNoZWNrX2Nsb3VkIiwiaWQiOiI2MmVjMzE4YTFlNjZmMTQyZjg0N2VhMDkiLCJpYXQiOjE2NTk2NDYzNDZ9.Jyu7J6G0TlCo_i_7KAZAhpJDALA-yHYG-0kp_WaJoWA"
+
 
 
 // MARK: Error Codes And Strings
