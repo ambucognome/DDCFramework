@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
  spec.name         = "DDCFramework"
-   spec.version      = "1.0.16"
+   spec.version      = "1.0.17"
      spec.requires_arc = true
    spec.summary      = "This is form framework"
    spec.description  = "Framework for form module"
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
         spec.resources = "DDCFramework/**/*.{png,jpeg,jpg,storyboard,xib,xcassets}"
     
     spec.framework  = "UIKit"
-    spec.dependency "KXJsonUI"
+    #spec.dependency "KXJsonUI"
     spec.dependency "Alamofire", "~> 4.7"
     spec.dependency "SCLAlertView"
     spec.dependency "NVActivityIndicatorView"
