@@ -57,6 +57,8 @@ class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
 //        }
         
         self.textField.text = (dataa?.value?.value as? String) ?? ""
+        self.textField.placeholder = "Select \(dataa?.title ?? "")"
+
         self.resetBtn.isHidden = true
         if isResetAvailable {
             self.resetBtn.isHidden = false
@@ -81,12 +83,13 @@ class TimePickerTableViewCell: UITableViewCell, UITextFieldDelegate {
         dateComponents.month = -3
         let threeMonthAgo = Calendar.current.date(byAdding: dateComponents, to: currentDate)
 
-        datePicker.show("DatePickerDialog",
+        datePicker.show("Select Time",
                         doneButtonTitle: "Done",
                         cancelButtonTitle: "Cancel",
-                        minimumDate: threeMonthAgo,
-                        maximumDate: currentDate,
+                        minimumDate: nil,
+                        maximumDate: nil,
                         datePickerMode: .time) { (date) in
+
             if let dt = date {
                 let formatter = DateFormatter()
                 formatter.dateFormat = "hh:mm:ss a"
